@@ -40,7 +40,7 @@ with open(stations_file, mode="r") as s:
     for r in rows:
         stations_ids.add(r["ID"])
         stations.append({
-            "fid": r["FID"],
+            "fid": r["\ufeffFID"],
             "id": r["ID"],
             "name_fi": r["Nimi"],
             "name_se": r["Namn"],
@@ -78,7 +78,7 @@ with open("trips.csv", mode="w") as ts:
                         r["Departure station id"] in stations_ids and \
                         r["Return station id"] in stations_ids:
                         trips.writerow({
-                            "departure_time": r["Departure"],
+                            "departure_time": r["\ufeffDeparture"],
                             "return_time": r["Return"],
                             "departure_station": r["Departure station id"],
                             "return_station": r["Return station id"],
