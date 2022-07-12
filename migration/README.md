@@ -78,7 +78,7 @@ CREATE TABLE trips(
     return_station INTEGER NOT NULL,
     distance REAL NOT NULL,
     duration INTEGER NOT NULL
-)
+);
 ```
 
 When migrating a temporary table is created since the postgresql `\COPY` command cannot properly format timestamps,
