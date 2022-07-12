@@ -47,7 +47,7 @@ The database is composed on two tables: `stations` and `trips`.
 
 The station table `sql` code look as follows:
 
-```postgresql
+```sql
 CREATE TABLE stations(
     fid SERIAL PRIMARY KEY,
     id INTEGER UNIQUE NOT NULL,
@@ -69,7 +69,7 @@ CREATE TABLE stations(
 
 The trips table `sql` code looks as follows:
  
-```postgresql
+```sql
 CREATE TABLE trips(
     id SERIAL PRIMARY KEY,
     departure_time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
@@ -77,8 +77,11 @@ CREATE TABLE trips(
     departure_station INTEGER NOT NULL,
     return_station INTEGER NOT NULL,
     distance REAL NOT NULL,
-    duration INTEGER NOT NULL
-)
+    duration INTEGER NOT NULL,
+
+    FOREIGN KEY(departure_station) REFERENCES stations(id),
+    FOREIGN KEY(return_station) REFERENCES stations(id),
+);
 ```
 
 When migrating a temporary table is created since the postgresql `\COPY` command cannot properly format timestamps,
