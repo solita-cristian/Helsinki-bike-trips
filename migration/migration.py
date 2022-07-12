@@ -59,3 +59,29 @@ with open(stations_file, mode="w") as s:
     writer = csv.DictWriter(s, fieldnames=stations_header)
     writer.writeheader()
     writer.writerows(stations)
+
+
+with open("trips.csv", mode="w") as ts:
+    trips = csv.DictWriter(ts, fieldnames=trips_header)
+    trips.writeheader()
+
+    for trip in trip_files:
+        with open(trip, mode="r") as t:
+            rows = csv.DictReader(t)
+
+            for r in rows:
+                with r["Covered distance (m)"] as distance, r["Duration (sec.)"] as duration:
+                    if distance and \
+                        duration and \
+                        float(distance) >= 10 and \
+                        int(duration) >= 10 and \
+                        r["Departure station id"] in stations_ids and \
+                        r["Return station id"] in stations_ids:
+                        trips.writerow({
+                            "departure_time": r["Departure"],
+                            "return_time": r["Return"],
+                            "departure_station": r["Departure station id"],
+                            "return_station": r["Return station id"],
+                            "distance": distance,
+                            "duration": duration,
+                        })
