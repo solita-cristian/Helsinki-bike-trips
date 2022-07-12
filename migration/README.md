@@ -35,13 +35,13 @@ A valid trips CSV row will:
 - Have `distance >= 10`
 - Have `duration >= 10`
 - Have non `null` fields
-- Have `departure_station` and `return_station` ids match with one station.
+- Have `departure_station` and `return_station` ids match with one station in the stations CSV file.
 
 ## Database migration
 
 The last step is to migrate the CSV files into a `postresql 12` database.
 
-The database is composed on two tables: `stations` and `trips`.
+The database is composed of two tables: `stations` and `trips`.
 
 ### Stations table
 
