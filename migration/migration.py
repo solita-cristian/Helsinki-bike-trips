@@ -70,18 +70,19 @@ with open("trips.csv", mode="w") as ts:
             rows = csv.DictReader(t)
 
             for r in rows:
-                with r["Covered distance (m)"] as distance, r["Duration (sec.)"] as duration:
-                    if distance and \
-                        duration and \
-                        float(distance) >= 10 and \
-                        int(duration) >= 10 and \
-                        r["Departure station id"] in stations_ids and \
-                        r["Return station id"] in stations_ids:
-                        trips.writerow({
-                            "departure_time": r["\ufeffDeparture"],
-                            "return_time": r["Return"],
-                            "departure_station": r["Departure station id"],
-                            "return_station": r["Return station id"],
-                            "distance": distance,
-                            "duration": duration,
-                        })
+                distance = r["Covered distance (m)"]
+                duration = r["Duration (sec.)"]
+                if distance and \
+                    duration and \
+                    float(distance) >= 10 and \
+                    int(duration) >= 10 and \
+                    r["Departure station id"] in stations_ids and \
+                    r["Return station id"] in stations_ids:
+                    trips.writerow({
+                        "departure_time": r["\ufeffDeparture"],
+                        "return_time": r["Return"],
+                        "departure_station": r["Departure station id"],
+                        "return_station": r["Return station id"],
+                        "distance": distance,
+                        "duration": duration,
+                    })
