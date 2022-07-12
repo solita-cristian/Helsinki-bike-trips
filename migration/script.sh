@@ -67,5 +67,7 @@ sudo -u postgres psql -d postgres --user=postgres -c "INSERT INTO trips(departur
    duration::INT
   FROM tmp;"
 
+sudo -u postgres psql -d postgres --user=postgres -c "DROP TABLE tmp;"
+
 # Cleanup all csv files
 rm -rf *.csv
