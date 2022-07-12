@@ -41,7 +41,10 @@ sudo -u postgres psql -d postgres --user=postgres -c "CREATE TABLE trips(
     departure_station INTEGER NOT NULL,
     return_station INTEGER NOT NULL,
     distance REAL NOT NULL,
-    duration INTEGER NOT NULL
+    duration INTEGER NOT NULL,
+
+    FOREIGN KEY(departure_station) REFERENCES stations(id),
+    FOREIGN KEY(return_station) REFERENCES stations(id),
 );"
 
 # Create temporary table to hold trips.csv data
