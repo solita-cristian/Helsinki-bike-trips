@@ -9,7 +9,7 @@ trips_header = [
     "departure_time",
     "return_time",
     "departure_station",
-    "return_time",
+    "return_station",
     "distance",
     "duration",
 ]
