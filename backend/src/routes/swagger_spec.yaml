@@ -76,7 +76,28 @@ paths:
           description: "Invalid IDsupplied"
         "404":
           description: "Station not found"
-
+  /trips:
+    get:
+      tags:
+        - "Trip"
+      summary: "Fetches a chunk of trips at the time, based on the current cursor position"
+      description: "Returns a list of trips"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "cursor"
+          in: "query"
+          required: true
+          type: "integer"
+          format: "int64"
+          description: "The cursor position, used to fetch the next chunk of trips"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: '#/definitions/Trip'
+        400:
+          description: "Invalid cursor"
 
 
 
