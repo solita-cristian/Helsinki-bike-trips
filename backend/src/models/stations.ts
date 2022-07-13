@@ -1,14 +1,14 @@
 import {Entity, Column, PrimaryGeneratedColumn, OneToMany} from "typeorm";
-import {Trip} from "./trip";
+import {trips} from "./trips";
 
 /**
  * Models a station contained in the database
  */
 @Entity()
-export class Station {
+export class stations {
     @PrimaryGeneratedColumn({type:"int"})
     fid: number
-    @Column({type:"int"})
+    @Column({type:"int", unique: true})
     id: number
     @Column({type:"varchar"})
     name_fi: string
@@ -32,4 +32,18 @@ export class Station {
     x: number
     @Column({type:"real"})
     y: number
+
+    /**
+     * Models a one-to-many relationship with inbound trips.
+     * An inbound trip is a trip whose destination is this station
+     */
+    @OneToMany(() => trips, (trip) => trip.return_station)
+    inbound_trips: trips[]
+
+    /**
+     * Models a one-to-many relationship with outbound trips.
+     * An outbound trip is a trip whose start is this station
+     */
+    @OneToMany(() => trips, (trip) => trip.departure_station)
+    outbound_trips: trips[]
 }
