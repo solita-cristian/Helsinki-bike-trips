@@ -8,10 +8,10 @@ import {stations} from "./stations";
 export class trips {
     @PrimaryGeneratedColumn({type: "int"})
     id: number
-    @Column({type:'time without time zone'})
-    departure_date: Date
-    @Column({type:'time without time zone'})
-    return_date: Date
+    @Column({type:'timestamp'})
+    departure_time: Date
+    @Column({type:'timestamp'})
+    return_time: Date
     @Column({type:'real'})
     distance: number
     @Column({type:"int"})
