@@ -10,23 +10,23 @@ export class stations {
     fid: number
     @Column({type:"int", unique: true})
     id: number
-    @Column({type:"varchar"})
+    @Column({type:"varchar", length: 50})
     name_fi: string
-    @Column({type:"varchar"})
+    @Column({type:"varchar", length: 50})
     name_se: string
-    @Column({type:"varchar"})
+    @Column({type:"varchar", length: 50})
     name_en: string
-    @Column({type:"varchar"})
+    @Column({type:"varchar", length: 50})
     address_fi: string
-    @Column({type:"varchar"})
+    @Column({type:"varchar", length: 50})
     address_se: string
-    @Column({type:"varchar", nullable:true})
+    @Column({type:"varchar", nullable:true, length: 20})
     city_fi: string | undefined
-    @Column({type:"varchar", nullable:true})
+    @Column({type:"varchar", nullable:true, length: 20})
     city_se: string | undefined
-    @Column({type:"varchar", nullable:true})
+    @Column({type:"varchar", nullable:true, length: 20})
     operator: string | undefined
-    @Column({type:"varchar", nullable:true})
+    @Column({type:"int", nullable:true})
     capacity: number | undefined
     @Column({type: "real"})
     x: number
