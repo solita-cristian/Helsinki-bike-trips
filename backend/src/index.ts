@@ -7,12 +7,15 @@ import {stations} from "./models/stations";
 import {trips} from "./models/trips";
 import app from "./server";
 
-dotenv.config()
+dotenv.config({
+    path: process.cwd() + "/src/.env"
+})
 
-const port = process.env.PORT || 8000;
+const port = process.env.PORT;
 
 app.listen(port, () => {
     console.log(`Server started at http://localhost:${port}`)
+    console.log(process.env)
 })
 
 AppDataSource.initialize()
