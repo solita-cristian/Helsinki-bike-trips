@@ -1,4 +1,3 @@
-import {Request, Response} from "express";
-import {getAllStations, getStation} from './controllers/stations/stations'
+import {getAllStations, getStation} from './controllers/stations'
 
 module.exports = { getAllStations, getStation };

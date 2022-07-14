@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
-import {AppDataSource} from "../../../database";
-import {stations} from "../../../models/stations";
-import {buildError} from "../../../models/errors";
+import {AppDataSource} from "../../database";
+import {stations} from "../../models/stations";
+import {buildError} from "../../models/errors";
 
 const stationsTable = AppDataSource.getRepository('stations')
 
@@ -42,8 +42,8 @@ export const getAllStations = async (req: Request, res: Response) => {
             ))
     }
 
-    const page: number = parseInt(req.query.page as any) || 1
-    const perPage: number = parseInt(req.query.per_page as any) || 10;
+    const page: number = parseInt(req.query.page as any);
+    const perPage: number = parseInt(req.query.per_page as any);
 
     // Define where the query starts fetching data. Default is 0 = start of the table
     builder.offset((page - 1) * perPage)
