@@ -1,4 +1,4 @@
-import {makeApp} from "../../src/server";
+import {makeApp} from "../../src/app";
 import {stations} from "../../src/models/stations";
 import request from 'supertest'
 import '../base'
