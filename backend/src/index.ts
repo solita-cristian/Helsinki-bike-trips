@@ -7,10 +7,6 @@ import {stations} from "./models/stations";
 import {trips} from "./models/trips";
 import {makeApp} from "./server";
 
-dotenv.config({
-    path: process.cwd() + "/src/.env"
-})
-
 const port = process.env.PORT;
 
 makeApp()
