@@ -5,7 +5,7 @@ import logging from "logging";
 import {DatabaseLogger} from "./logger";
 import {stations} from "./models/stations";
 import {trips} from "./models/trips";
-import app from "./server";
+import {makeApp} from "./server";
 
 dotenv.config({
     path: process.cwd() + "/src/.env"
@@ -13,10 +13,10 @@ dotenv.config({
 
 const port = process.env.PORT;
 
-app.listen(port, () => {
-    console.log(`Server started at http://localhost:${port}`)
-    console.log(process.env)
-})
+makeApp()
+    .then(app => app.listen(port, () => {
+        console.log(`Server started at http://localhost:${port}`)
+    }))
 
 AppDataSource.initialize()
     .then(async () => {
