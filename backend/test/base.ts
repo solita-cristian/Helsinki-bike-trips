@@ -1,6 +1,6 @@
-import {AppDataSource} from "../database";
+import {AppDataSource} from "../src/database";
 import {beforeAll, afterEach} from "@jest/globals";
-import {TestLogger} from "../logger";
+import {TestLogger} from "../src/logger";
 
 // setting a timeout of 20 seconds ensures that the database connection is established.
 jest.setTimeout(20 * 1000)

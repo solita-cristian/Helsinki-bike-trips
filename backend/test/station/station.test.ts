@@ -1,8 +1,8 @@
-import {makeApp} from "../../server";
-import {stations} from "../../models/stations";
+import {makeApp} from "../../src/server";
+import {stations} from "../../src/models/stations";
 import request from 'supertest'
-import '../index'
-import {Error} from '../../models/errors'
+import '../base'
+import {Error} from '../../src/models/errors'
 
 describe("Station", () => {
     const validUrl = '/stations/501'
