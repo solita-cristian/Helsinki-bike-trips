@@ -1,0 +1,31 @@
+type: "object"
+description: "A series of statistics regarding a single station"
+properties:
+  total_inbound:
+    type: "integer"
+    format: "int64"
+    description: "The total amount of trips which end in this station"
+  total_outbound:
+    type: "integer"
+    format: "int64"
+    description: "The total amount of trips which start in this station"
+  average_distance_inbound:
+    type: "integer"
+    format: "int64"
+    description: "The average distance of the trips which end in this station"
+  average_distance_outbound:
+    type: "integer"
+    format: "int64"
+    description: "The average distance of the trips which start in this station"
+  top_inbound:
+    type: "array"
+    maxItems: 5
+    items:
+      $ref: "./trip.yaml"
+    description: "The top 5 stations which have trips ending in this station"
+  top_outbound:
+    type: "array"
+    maxItems: 5
+    items:
+      $ref: "./trip.yaml"
+    description: "The top 5 stations which have trips starting in this station"
