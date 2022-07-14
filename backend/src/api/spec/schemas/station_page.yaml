@@ -1,0 +1,14 @@
+type: "object"
+description: "A page of a variable amount of stations"
+properties:
+  data:
+    description: "The fetched stations"
+    type: "array"
+    items:
+      $ref: './station.yaml'
+  page:
+    description: "The currently fetched page"
+    type: "integer"
+  perPage:
+    description: "The amount of items in the current page"
+    type: "integer"
