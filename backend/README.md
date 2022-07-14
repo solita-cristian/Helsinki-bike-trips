@@ -1,4 +1,4 @@
-# Migration service
+# Backend service
 
 This service is responsible for exposing an API that will fetch the required data from the database and send it to the 
 frontend service.
