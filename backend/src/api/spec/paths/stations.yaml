@@ -5,6 +5,13 @@ get:
   operationId: "getAllStations"
   produces:
   - "application/json"
+  parameters:
+    - name: "sort"
+      in: "query"
+      required: false
+      type: "string"
+      enum: ['asc', 'desc']
+      description: "The sorting ordering. The sorting is done by station ID"
   responses:
     "200":
       description: "successful operation"
@@ -12,3 +19,7 @@ get:
         type: "array"
         items:
           $ref: "./../schemas/station.yaml"
+    "400":
+      description: "badly formatted parameter"
+      schema:
+        $ref: "./../schemas/error.yaml"
