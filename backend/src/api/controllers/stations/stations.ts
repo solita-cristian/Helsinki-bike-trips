@@ -8,12 +8,24 @@ const stationsTable = AppDataSource.getRepository('stations')
 /**
  * Returns all stations from the database.
  *
- * The stations can be sorted with the `sort` query parameter, which accepts 'asc' or 'desc'.
+ * The stations are fetched using pagination, using the **required** query parameters `page` and `per_page`.
+ *
+ * The stations can be sorted with the `sort` **optional** query parameter, which accepts 'asc' or 'desc'.
  * @param req The request
  * @param res The response
  */
 export const getAllStations = async (req: Request, res: Response) => {
-    const builder = stationsTable.createQueryBuilder('getAllStations').cache(true)
+
+    if (!req.query.page || !req.query.per_page)
+        return res.status(400).json(buildError(
+                "Missing parameter",
+                "A required missing parameter was found",
+                400,
+                `The parameters page and per_page are expected, but are undefined`,
+                req.url
+            ))
+
+    const builder = stationsTable.createQueryBuilder('getAllStations').cache(true);
 
     const sort: any = req.query.sort;
 
@@ -31,7 +43,7 @@ export const getAllStations = async (req: Request, res: Response) => {
     }
 
     const page: number = parseInt(req.query.page as any) || 1
-    const perPage: number = 10;
+    const perPage: number = parseInt(req.query.per_page as any) || 10;
 
     // Define where the query starts fetching data. Default is 0 = start of the table
     builder.offset((page - 1) * perPage)
