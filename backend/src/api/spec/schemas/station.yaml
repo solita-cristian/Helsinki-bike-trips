@@ -32,15 +32,11 @@ properties:
     type: "integer"
     format: "int64"
     description: "The total bike capacity of the station"
-  coordinates:
-    type: "object"
-    description: "The geographical coordinates of the station"
-    properties:
-      x:
-        type: "number"
-        format: "float32"
-        description: "The latitudinal coordinate"
-      y:
-        type: "number"
-        format: "float32"
-        description: "The longitudinal coordinate"
+  x:
+    type: "number"
+    format: "float32"
+    description: "The latitudinal coordinate"
+  y:
+    type: "number"
+    format: "float32"
+    description: "The longitudinal coordinate"
