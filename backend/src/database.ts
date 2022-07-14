@@ -5,6 +5,4 @@ import {trips} from "./models/trips";
 import dotenv from "dotenv";
 import {databaseConfiguration} from "../ormconfig";
 
-
-
 export const AppDataSource = new DataSource(databaseConfiguration)
