@@ -12,13 +12,23 @@ get:
       type: "string"
       enum: ['asc', 'desc']
       description: "The sorting ordering. The sorting is done by station ID"
+    - name: "page"
+      in: "query"
+      required: true
+      type: "integer"
+      description: "Fetches only the items contained in the specified page"
+    - name: "per_page"
+      in: "query"
+      required: true
+      type: "integer"
+      description: "How many items per page will get fetched"
   responses:
     "200":
       description: "successful operation"
       schema:
         type: "array"
         items:
-          $ref: "./../schemas/station.yaml"
+          $ref: "./../schemas/station_page.yaml"
     "400":
       description: "badly formatted parameter"
       schema:
