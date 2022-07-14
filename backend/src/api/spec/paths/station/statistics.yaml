@@ -1,0 +1,24 @@
+get:
+  tags:
+  - "root"
+  summary: "Fetch station statistics based on given station ID"
+  operationId: "getStatistics"
+  description: "Returns a single statistic"
+  produces:
+  - "application/json"
+  parameters:
+  - name: "stationId"
+    in: "path"
+    description: "Unique ID of the station"
+    required: true
+    type: "integer"
+    format: "int64"
+  responses:
+    "200":
+      description: "successful operation"
+      schema:
+        $ref: './../../schemas/statistics.yaml'
+    "404":
+      description: "Station not found"
+      schema:
+        $ref: './../../schemas/error.yaml'
