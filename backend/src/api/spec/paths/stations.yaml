@@ -30,6 +30,6 @@ get:
         items:
           $ref: "./../schemas/station_page.yaml"
     "400":
-      description: "badly formatted parameter"
+      description: "badly formatted  or missing page, per_page parameters"
       schema:
         $ref: "./../schemas/error.yaml"
