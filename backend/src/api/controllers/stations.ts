@@ -2,8 +2,10 @@ import {Request, Response} from "express";
 import {AppDataSource} from "../../database";
 import {stations} from "../../models/stations";
 import {buildError} from "../../models/errors";
+import {trips} from "../../models/trips";
 
-const stationsTable = AppDataSource.getRepository('stations')
+const stations_repository = AppDataSource.getRepository('stations')
+const trips_repository = AppDataSource.getRepository('trips')
 
 /**
  * Returns all stations from the database.
@@ -25,7 +27,7 @@ export const getAllStations = async (req: Request, res: Response) => {
                 req.url
             ))
 
-    const builder = stationsTable.createQueryBuilder('getAllStations').cache(true);
+    const builder = stations_repository.createQueryBuilder('getAllStations').cache(true);
 
     const sort: any = req.query.sort;
 
@@ -65,7 +67,7 @@ export const getAllStations = async (req: Request, res: Response) => {
 export const getStation = async (req: Request, res: Response) => {
     const {stationId} = req.params
 
-    stationsTable
+    stations_repository
         .createQueryBuilder('getStationById')
         .cache(true)
         .where('id = :stationId', {stationId: stationId})
