@@ -2,7 +2,7 @@ get:
   tags:
   - "root"
   summary: "Fetch station statistics based on given station ID"
-  operationId: "getStatistics"
+  operationId: "getStationStatistics"
   description: "Returns a single statistic"
   produces:
   - "application/json"
@@ -13,6 +13,12 @@ get:
     required: true
     type: "integer"
     format: "int64"
+  - name: "month"
+    in: "query"
+    description: "The number of the month. Has to be between 1 and 12"
+    required: false
+    type: "integer"
+    format: "int64"
   responses:
     "200":
       description: "successful operation"
@@ -20,5 +26,9 @@ get:
         $ref: './../../schemas/statistics.yaml'
     "404":
       description: "Station not found"
+      schema:
+        $ref: './../../schemas/error.yaml'
+    "400":
+      description: "Month badly formatted"
       schema:
         $ref: './../../schemas/error.yaml'
