@@ -15,8 +15,7 @@ python3 migration.py
 
 # CREATE stations table
 sudo -u postgres psql -d postgres --user=postgres -c "CREATE TABLE stations(
-    fid SERIAL PRIMARY KEY,
-    id INTEGER UNIQUE NOT NULL,
+    id SERIAL PRIMARY KEY,
     name_fi VARCHAR(50) NOT NULL,
     name_se VARCHAR(50) NOT NULL,
     name_en VARCHAR(50) NOT NULL,
