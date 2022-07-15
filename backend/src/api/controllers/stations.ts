@@ -207,7 +207,7 @@ export const getStationStatistics = async (req: Request, res: Response) => {
     ))
 
     res.status(200).json(
-        !month ? [{
+        !month ? { total : {
             total_inbound: inbound_trips.length,
             total_outbound: outbound_trips.length,
             average_distance_inbound,
@@ -215,7 +215,7 @@ export const getStationStatistics = async (req: Request, res: Response) => {
             top_outbound: await getTopStations(true, null, stationId),
             top_inbound: await getTopStations(false, null, stationId)
         },
-        ...stats] :
+        monthly: [...stats]} :
         stats
     )
 
