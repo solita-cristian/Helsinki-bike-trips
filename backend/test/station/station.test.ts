@@ -2,7 +2,7 @@ import {makeApp} from "../../src/app";
 import {stations} from "../../src/models/stations";
 import request from 'supertest'
 import '../base'
-import {Error} from '../../src/models/errors'
+import {IError} from '../../src/models/errors'
 
 describe("Station", () => {
     const validUrl = '/stations/501'
@@ -17,7 +17,7 @@ describe("Station", () => {
     test("Should return an error message when station is not found", async () => {
         const errorMessage = await request(await makeApp()).get(invalidUrl)
         expect(errorMessage.statusCode).toBe(404)
-        const message: Error = errorMessage.body
+        const message: IError = errorMessage.body
         expect(message).toBeTruthy()
         expect(message.status).toEqual(errorMessage.statusCode)
         expect(message.instance).toEqual(invalidUrl)

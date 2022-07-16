@@ -1,4 +1,4 @@
-export interface Error {
+export interface IError {
     id: string,
     title: string,
     status: number,
@@ -7,7 +7,7 @@ export interface Error {
 }
 
 export const buildError = (id: string, title: string, status: number, detail: string, url: string) => {
-    const error: Error = {
+    const error: IError = {
         id: id,
         title: title,
         status: status,
