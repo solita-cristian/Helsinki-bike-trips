@@ -3,9 +3,31 @@ import {AppDataSource} from "../../database";
 import {stations} from "../../models/stations";
 import {buildError} from "../../models/errors";
 import {trips} from "../../models/trips";
+import {BaseController} from "./base";
 
-const stations_repository = AppDataSource.getRepository('stations')
-const trips_repository = AppDataSource.getRepository('trips')
+
+/**
+ * Responsible for handling /stations requests.
+ */
+export class StationsController extends BaseController<stations> {
+    constructor() {
+        super(AppDataSource.getRepository('stations'));
+    }
+
+    /**
+     * Returns a station if it exists, a 404 not found error otherwise
+     * @param req The request
+     * @param res The response
+     * @param stationId The ID of the requested station
+     */
+    private async getStationById(req: Request, res: Response, stationId: string) {
+        return await this.repository
+            .createQueryBuilder('getStationById')
+            .cache(true)
+            .where('id = :stationId', {stationId: stationId})
+            .getOne();
+    }
+
 
 /**
  * Returns all stations from the database.
@@ -59,32 +81,20 @@ export const getAllStations = async (req: Request, res: Response) => {
     })
 }
 
-/**
- * Returns a station based on the passed ID if exists, an error message otherwise.
- * @param req The request
- * @param res The response
- */
-export const getStation = async (req: Request, res: Response) => {
-    const {stationId} = req.params
+    /**
+     * Returns a station based on the passed ID if exists, an error message otherwise.
+     */
+    getStation = () => {
+        return async (req: Request, res: Response) => {
+            const {stationId} = req.params
 
-    stations_repository
-        .createQueryBuilder('getStationById')
-        .cache(true)
-        .where('id = :stationId', {stationId: stationId})
-        .getOneOrFail()
-        .then(station => res.status(200).json(station))
-        .catch(error => res.status(404).json(buildError(
-            "Not found",
-            "Station not found",
-            404,
-            error,
-            req.url
-        )))
-}
+            const station = await this.getStationById(req, res, stationId)
 
-const sumDistances = (accumulatedTotal: number, currentDistance: number) => {
-    return accumulatedTotal + currentDistance;
-}
+            return station ?
+                this.sendResult(res, station) :
+                this.notFoundError(req, res, 'station', 'ID', stationId);
+        }
+    }
 
 /**
  * Returns the average distance of the trips.
