@@ -247,5 +247,6 @@ const stationsController = new StationsController()
 
 export const getAllStations = stationsController.getStations()
 export const getStation = stationsController.getStation()
+export const searchStations = getAllStations;
 //export const searchStations = stationsController.getStations()
 export const getStationStatistics = stationsController.getStatistics()
