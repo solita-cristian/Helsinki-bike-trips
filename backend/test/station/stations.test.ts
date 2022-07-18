@@ -6,31 +6,40 @@ import {IError} from "../../src/models/errors";
 import {verifyError} from "../base";
 import {StationsController} from "../../src/api/controllers/stations";
 import {StationsPage} from "../../src/models/page";
-import exp from "constants";
 
 interface IStationsParameters {
     page?: number,
-    perPage?: number
+    perPage?: number,
+    sort?: string
 }
 
 const buildQueryParameters = (parameters: IStationsParameters) => {
     const page = parameters.page != undefined ? `page=${parameters.page}` : '';
     const per_page = parameters.perPage != undefined ? `per_page=${parameters.perPage}` : '';
+    const sort = parameters.sort != undefined ? `sort=${parameters.sort}` : '';
 
-    if (page != '' && per_page != '')
-        return `${page}&${per_page}`;
-    else if(page != '')
-        return page
-    else
-        return per_page
+    const pagination =
+        page != '' && per_page != '' ?
+            `${page}&${per_page}` :
+            page != '' ?
+                page :
+                per_page != '' ?
+                    per_page :
+                        '';
+
+    return sort != '' && pagination != '' ?
+        `${sort}&${pagination}` :
+        sort != '' ?
+            sort :
+            pagination != '' ?
+                pagination :
+                '';
 
 }
 
 const makeRequestWithParameters = async (baseUrl: string, parameters: IStationsParameters) => {
     const params = buildQueryParameters(parameters);
-    console.log(params)
     const url = `${baseUrl}?${params}`
-    console.log(url)
     return {
         fullUrl: url,
         response: await request(await makeApp()).get(url)
@@ -142,6 +151,65 @@ describe("Stations", () => {
             expect(stations.data).toBeTruthy();
             expect(stations.data).toHaveLength(per_page);
 
+        })
+
+    test('Should return a list of stations when both page and per_page query parameters are defined, sorted ASC by ID',
+        async () => {
+            const parameters = {
+                page: page,
+                perPage: per_page,
+                sort: 'asc'
+            };
+
+            const {response} = await makeRequestWithParameters(url, parameters);
+            expect(response.statusCode).toEqual(200);
+
+            const stations = response.body as StationsPage;
+            expect(stations).toBeTruthy();
+
+            // Check for ascending order
+            for (let i = 0; i < stations.perPage-1; i++) {
+                expect(stations.data[i].id).toBeLessThan(stations.data[i+1].id)
+            }
+        })
+
+    test('Should return a list of stations when both page and per_page query parameters are defined, sorted DESC by ID',
+        async () => {
+            const parameters = {
+                page: page,
+                perPage: per_page,
+                sort: 'desc'
+            };
+
+            const {response} = await makeRequestWithParameters(url, parameters);
+            expect(response.statusCode).toEqual(200);
+
+            const stations = response.body as StationsPage;
+            expect(stations).toBeTruthy();
+
+            // Check for ascending order
+            for (let i = 0; i < stations.perPage-1; i++) {
+                expect(stations.data[i].id).toBeGreaterThan(stations.data[i+1].id)
+            }
+        })
+
+    test('Should return a 400 bad parameter error when sort query parameter is different than `asc` or `desc`',
+        async () => {
+            const parameters = {
+                page: 1,
+                perPage: 10,
+                sort: "food"
+            };
+            const {fullUrl, response} = await makeRequestWithParameters(url, parameters)
+            expect(response.statusCode).toEqual(400);
+
+            verifyError(response.body as IError,
+                'Badly formatted parameter',
+                'A required missing parameter is badly formatted',
+                response.statusCode,
+                `The parameter sort has value ${parameters.sort}. Expected asc or desc`,
+                fullUrl
+            );
         })
 
 })
