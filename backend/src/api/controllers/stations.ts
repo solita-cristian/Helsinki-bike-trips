@@ -3,6 +3,7 @@ import {AppDataSource} from "../../database";
 import {stations} from "../../models/stations";
 import {trips} from "../../models/trips";
 import {BaseController} from "./base";
+import {StationsPage} from "../../models/page";
 
 
 /**
@@ -15,11 +16,9 @@ export class StationsController extends BaseController<stations> {
 
     /**
      * Returns a station if it exists, a 404 not found error otherwise
-     * @param req The request
-     * @param res The response
      * @param stationId The ID of the requested station
      */
-    private async getStationById(req: Request, res: Response, stationId: string) {
+    private getStationById = async (stationId: string) => {
         return await this.repository
             .createQueryBuilder('getStationById')
             .cache(true)
@@ -27,58 +26,64 @@ export class StationsController extends BaseController<stations> {
             .getOne();
     }
 
-
-/**
- * Returns all stations from the database.
- *
- * The stations are fetched using pagination, using the **required** query parameters `page` and `per_page`.
- *
- * The stations can be sorted with the `sort` **optional** query parameter, which accepts 'asc' or 'desc'.
- * @param req The request
- * @param res The response
- */
-export const getAllStations = async (req: Request, res: Response) => {
-
-    if (!req.query.page || !req.query.per_page)
-        return res.status(400).json(buildError(
-                "Missing parameter",
-                "A required missing parameter was found",
-                400,
-                `The parameters page and per_page are expected, but are undefined`,
-                req.url
-            ))
-
-    const builder = stations_repository.createQueryBuilder('getAllStations').cache(true);
-
-    const sort: any = req.query.sort;
-
-    if (sort) {
-        if(['asc', 'desc'].includes(sort))
-            builder.orderBy('id', sort.toUpperCase())
-        else
-            return res.status(400).json(buildError(
-                "Bad parameter",
-                "A badly formatted parameter was found",
-                400,
-                `The parameter sort has value ${sort}. Expected ['asc', 'desc'] `,
-                req.url
-            ))
-    }
-
-    const page: number = parseInt(req.query.page as any);
-    const perPage: number = parseInt(req.query.per_page as any);
-
-    // Define where the query starts fetching data. Default is 0 = start of the table
-    builder.offset((page - 1) * perPage)
-    // Limit the number of returned values to perPage
-    builder.limit(perPage)
-
-    res.status(200).json({
-        data: await builder.getMany(),
-        page,
-        perPage,
-    })
+    getStationsCount = async () => {
+        return await this.repository
+            .createQueryBuilder('getStationsCount')
+            .getCount();
 }
+
+
+    /**
+     * Returns all stations from the database.
+     *
+     * The stations are fetched using pagination, using the **required** query parameters `page` and `per_page`.
+     *
+     * The stations can be sorted with the `sort` **optional** query parameter, which accepts 'asc' or 'desc'.
+     */
+    getStations = () => {
+        return async (req: Request, res: Response) => {
+            const {page, per_page} = req.query;
+            const stationsCount = await this.getStationsCount();
+
+            if (!page || parseInt(page as string) < 1)
+                return this.badParameterError(req, res, 'page', page, '>= 1');
+            else if(!per_page ||
+                parseInt(per_page as string) < 1 ||
+                parseInt(per_page as string) > stationsCount
+            )
+                return this.badParameterError(
+                    req,
+                    res,
+                    'per_page',
+                    per_page,
+                    `1 <= per_page <= ${stationsCount}`);
+
+            const builder = this.repository.createQueryBuilder('getAllStations').cache(true);
+
+            const sort: any = req.query.sort;
+
+            if (sort) {
+                if(['asc', 'desc'].includes(sort))
+                    builder.orderBy('id', sort.toUpperCase());
+                else
+                   return this.badParameterError(req, res, 'sort', sort, ['asc', 'desc']);
+            }
+
+            const iPage: number = parseInt(req.query.page as any);
+            const perPage: number = parseInt(req.query.per_page as any);
+
+            // Define where the query starts fetching data. Default is 0 = start of the table
+            builder.offset((iPage - 1) * perPage)
+            // Limit the number of returned values to perPage
+            builder.limit(perPage)
+
+            this.sendResult(res, new StationsPage(
+                await builder.getMany(),
+                iPage,
+                perPage
+            ))
+        }
+    }
 
     /**
      * Returns a station based on the passed ID if exists, an error message otherwise.
@@ -87,7 +92,7 @@ export const getAllStations = async (req: Request, res: Response) => {
         return async (req: Request, res: Response) => {
             const {stationId} = req.params
 
-            const station = await this.getStationById(req, res, stationId)
+            const station = await this.getStationById(stationId)
 
             return station ?
                 this.sendResult(res, station) :
