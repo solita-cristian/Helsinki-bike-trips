@@ -60,15 +60,6 @@ export class StationsController extends BaseController<stations> {
 
             const builder = this.repository.createQueryBuilder('getAllStations').cache(true);
 
-            const sort: any = req.query.sort;
-
-            if (sort) {
-                if(['asc', 'desc'].includes(sort))
-                    builder.orderBy('id', sort.toUpperCase());
-                else
-                   return this.badParameterError(req, res, 'sort', sort, 'asc or desc');
-            }
-
             const iPage: number = parseInt(req.query.page as any);
             const perPage: number = parseInt(req.query.per_page as any);
 
