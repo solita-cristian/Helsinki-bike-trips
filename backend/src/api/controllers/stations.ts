@@ -4,6 +4,7 @@ import {stations} from "../../models/stations";
 import {trips} from "../../models/trips";
 import {BaseController} from "./base";
 import {StationsPage} from "../../models/page";
+import {StationParameters} from "../../models/stationParameters";
 
 
 /**
@@ -43,6 +44,7 @@ export class StationsController extends BaseController<stations> {
     getStations = () => {
         return async (req: Request, res: Response) => {
             const {page, per_page} = req.query;
+
             const stationsCount = await this.getStationsCount();
 
             if (!page || parseInt(page as string) < 1)
@@ -59,6 +61,26 @@ export class StationsController extends BaseController<stations> {
                     `1 <= per_page <= ${stationsCount}`);
 
             const builder = this.repository.createQueryBuilder('getAllStations').cache(true);
+
+            if(req.method === 'POST') {
+                const parameters = req.body as StationParameters
+
+                // Since this evaluates to true, I don't have to add cumbersome logic for adding where clauses.
+                builder.where('1=1')
+
+                if (parameters.city != undefined)
+                    builder.andWhere(`city_${parameters.city[1]} = :city`,
+                        {city: parameters.city[0]});
+                if (parameters.address != undefined)
+                    builder.andWhere(`address_${parameters.address[1]} like :address`,
+                        {address: `%${parameters.address[0]}%`});
+                if (parameters.operator != undefined)
+                    builder.andWhere(`operator like :operator`,
+                        {operator: `%${parameters.operator}%`});
+                if (parameters.capacity != undefined)
+                    builder.andWhere(`capacity = :capacity`,
+                        {capacity: parameters.capacity});
+            }
 
             const iPage: number = parseInt(req.query.page as any);
             const perPage: number = parseInt(req.query.per_page as any);

@@ -1,0 +1,22 @@
+type: "object"
+properties:
+  city:
+    description: "An array containing the city name and the specified language"
+    type: "array"
+    items:
+      - type: "string"
+    minItems: 2
+    maxItems: 2
+  address:
+    description: "An array containing the address and the language"
+    type: "array"
+    items:
+        - type: "string"
+    minItems: 2
+    maxItems: 2
+  operator:
+    type: "string"
+    description: "The operator"
+  capacity:
+    type: "integer"
+    description: "The capacity of the station"

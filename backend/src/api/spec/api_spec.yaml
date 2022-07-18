@@ -28,3 +28,5 @@ definitions:
     $ref: './schemas/error.yaml'
   station page:
     $ref: './schemas/station_page.yaml'
+  station parameters:
+    $ref: './schemas/station_parameters.yaml'

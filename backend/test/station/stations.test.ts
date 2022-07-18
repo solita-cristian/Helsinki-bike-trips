@@ -1,11 +1,10 @@
 import {makeApp} from "../../src/app";
-import {stations} from "../../src/models/stations";
 import request from 'supertest'
 import '../base'
 import {IError} from "../../src/models/errors";
 import {verifyError} from "../base";
-import {StationsController} from "../../src/api/controllers/stations";
 import {StationsPage} from "../../src/models/page";
+import {AddressLanguage, CityLanguage, StationParameters} from "../../src/models/stationParameters";
 
 interface IStationsParameters {
     page?: number,
@@ -37,12 +36,23 @@ const buildQueryParameters = (parameters: IStationsParameters) => {
 
 }
 
-const makeRequestWithParameters = async (baseUrl: string, parameters: IStationsParameters) => {
+const makeRequestWithParameters = async (baseUrl: string, parameters: IStationsParameters, body?: any, method = 'get') => {
     const params = buildQueryParameters(parameters);
     const url = `${baseUrl}?${params}`
+    let response;
+
+    switch (method) {
+        case 'post':
+            response = await request(await makeApp()).post(url).send(body)
+            break;
+        default:
+            response = await request(await makeApp()).get(url)
+            break;
+    }
+
     return {
         fullUrl: url,
-        response: await request(await makeApp()).get(url)
+        response: response
     };
 }
 
@@ -152,5 +162,116 @@ describe("Stations", () => {
             expect(stations.data).toHaveLength(per_page);
 
         })
+
+    test('Should return a list of station satisfying city parameter', async () => {
+        const queryParameters = {
+            page: page,
+            perPage: per_page
+        }
+        const stationParameters: StationParameters = {
+            city: ['Espoo', CityLanguage.FI]
+        }
+
+        const {response} = await makeRequestWithParameters(url, queryParameters, stationParameters, 'post');
+        expect(response.statusCode).toEqual(200);
+
+        const stations: StationsPage = response.body;
+        expect(stations.data.length).toBeGreaterThan(0);
+        stations.data.forEach(s => expect(s.city_fi).toEqual('Espoo'))
+
+    })
+
+    test('Should return a list of station satisfying address parameter', async () => {
+        const queryParameters = {
+            page: page,
+            perPage: per_page
+        }
+        const stationParameters: StationParameters = {
+            address: ['Gallen-Kallelas', AddressLanguage.SE]
+        }
+
+        const {response} = await makeRequestWithParameters(url, queryParameters, stationParameters, 'post');
+        expect(response.statusCode).toEqual(200);
+
+        const stations: StationsPage = response.body;
+        expect(stations.data.length).toBeGreaterThan(0);
+        stations.data.forEach(s => expect(s.address_se).toContain('Gallen-Kallelas'))
+
+    })
+
+    test('Should return a list of station satisfying capacity parameter', async () => {
+        const queryParameters = {
+            page: page,
+            perPage: per_page
+        }
+        const stationParameters: StationParameters = {
+            capacity: 10
+        }
+
+        const {response} = await makeRequestWithParameters(url, queryParameters, stationParameters, 'post');
+        expect(response.statusCode).toEqual(200);
+
+        const stations: StationsPage = response.body;
+        expect(stations.data.length).toBeGreaterThan(0);
+        stations.data.forEach(s => expect(s.capacity).toEqual(10))
+
+    })
+
+    test('Should return a list of station satisfying operator parameter', async () => {
+        const queryParameters = {
+            page: page,
+            perPage: per_page
+        }
+        const stationParameters: StationParameters = {
+            operator: "CityBike"
+        }
+
+        const {response} = await makeRequestWithParameters(url, queryParameters, stationParameters, 'post');
+        expect(response.statusCode).toEqual(200);
+
+        const stations: StationsPage = response.body;
+        expect(stations.data.length).toBeGreaterThan(0);
+        stations.data.forEach(s => expect(s.operator).toContain('CityBike'))
+
+    })
+
+    test('Should return a list of station satisfying name parameter', async () => {
+        const queryParameters = {
+            page: page,
+            perPage: per_page
+        }
+        const stationParameters: StationParameters = {
+            name: ['Sepetlahdentie', CityLanguage.FI]
+        }
+
+        const {response} = await makeRequestWithParameters(url, queryParameters, stationParameters, 'post');
+        expect(response.statusCode).toEqual(200);
+
+        const stations: StationsPage = response.body;
+        expect(stations.data.length).toBeGreaterThan(0);
+        stations.data.forEach(s => expect(s.name_fi).toContain('Sepetlahdentie'));
+
+    })
+
+    test('Should return a list of station satisfying multiple parameters', async () => {
+        const queryParameters = {
+            page: page,
+            perPage: per_page
+        }
+        const stationParameters: StationParameters = {
+            name: ['Framnäsvägen', CityLanguage.SE],
+            address: ['Kalastajantie 6', AddressLanguage.Fi],
+            operator: "CityBike",
+        }
+
+        const {response} = await makeRequestWithParameters(url, queryParameters, stationParameters, 'post');
+        expect(response.statusCode).toEqual(200);
+
+        const stations: StationsPage = response.body;
+        expect(stations.data.length).toEqual(1);
+        stations.data.forEach(s => expect(s.operator).toContain('CityBike'));
+        stations.data.forEach(s => expect(s.name_se).toContain('Framnäsvägen'));
+        stations.data.forEach(s => expect(s.address_fi).toContain('Kalastajantie'));
+    })
 
 })

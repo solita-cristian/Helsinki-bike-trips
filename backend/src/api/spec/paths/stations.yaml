@@ -33,3 +33,38 @@ get:
       description: "badly formatted  or missing page, per_page parameters"
       schema:
         $ref: "./../schemas/error.yaml"
+
+post:
+  tags:
+    - "root"
+  summary: "Searches for stations which have the requested features"
+  operationId: "searchStations"
+  produces:
+    - "application/json"
+  parameters:
+    - name: "page"
+      in: "query"
+      required: true
+      type: "integer"
+      description: "Fetches only the items contained in the specified page"
+    - name: "per_page"
+      in: "query"
+      required: true
+      type: "integer"
+      description: "How many items per page will get fetched"
+    - name: "search_parameters"
+      in: "body"
+      description: "The parameters to search for when retrieving the stations"
+      schema:
+        $ref: "./../schemas/station_parameters.yaml"
+  responses:
+    "200":
+      description: "successful operation"
+      schema:
+        type: "array"
+        items:
+          $ref: "./../schemas/station_page.yaml"
+    "400":
+      description: "badly formatted  or missing page, per_page parameters"
+      schema:
+        $ref: "./../schemas/error.yaml"

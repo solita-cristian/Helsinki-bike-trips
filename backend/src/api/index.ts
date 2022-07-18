@@ -1,3 +1,3 @@
-import {getAllStations, getStation, getStationStatistics} from './controllers/stations'
+import {getAllStations, getStation, getStationStatistics, searchStations} from './controllers/stations'
 
-module.exports = { getAllStations, getStation, getStationStatistics };
+module.exports = { getAllStations, getStation, getStationStatistics, searchStations };
