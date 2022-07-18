@@ -1,5 +1,5 @@
 import {Repository} from "typeorm";
-import {buildError, IError} from "../../models/errors";
+import {NotFoundError, BadParameterError, Error} from "../../models/errors";
 import {Response, Request} from "express";
 
 /**
@@ -15,7 +15,7 @@ export class BaseController<Entity> {
      * @param res The response object
      * @param error An error object, describing the kind of error, as well as the request url that generated it
      */
-    sendError = (res: Response, error: IError) => {
+    sendError = (res: Response, error: Error) => {
         return res.status(error.status).json(error)
     }
 
@@ -38,14 +38,13 @@ export class BaseController<Entity> {
      * @param foundValue The value of the bad parameter
      * @param expectedValue The expected value of the bad parameter
      */
-    badParameterError = (req: Request, res: Response, parameterName: string,
-                    foundValue: any, expectedValue: any) => {
-        return this.sendError(res, buildError("Badly formatted parameter",
-                    "A required missing parameter is badly formatted",
-                    400,
-                    `The parameter ${parameterName} has value ${foundValue}. Expected ${expectedValue}`,
-                    req.url)
+    badParameterError = (req: Request, res: Response, parameterName: string, foundValue: any, expectedValue: any) => {
+        const badParameterError = new BadParameterError(
+            "A required missing parameter is badly formatted",
+            `The parameter ${parameterName} has value ${foundValue}. Expected ${expectedValue}`,
+            req.url
         )
+        return this.sendError(res, badParameterError)
     }
 
     /**
@@ -57,13 +56,12 @@ export class BaseController<Entity> {
      * @param propertyValue The value of the property by which the requested object was not found
      */
     notFoundError = (req: Request, res: Response, what: string, propertyName: string, propertyValue: any) => {
-        return this.sendError(res, buildError(
-                "Not found",
-                 `${what[0].toUpperCase() + what.substring(1)} not found`,
-                404,
-                `The ${what} with ${propertyName} = ${propertyValue} was not found`,
-                req.url
-            ));
+        const notFoundError = new BadParameterError(
+            `${what[0].toUpperCase() + what.substring(1)} not found`,
+            `The ${what} with ${propertyName} = ${propertyValue} was not found`,
+            req.url
+        )
+        return this.sendError(res, notFoundError);
     }
 
 }

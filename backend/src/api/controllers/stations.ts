@@ -1,7 +1,6 @@
 import {Request, Response} from "express";
 import {AppDataSource} from "../../database";
 import {stations} from "../../models/stations";
-import {buildError} from "../../models/errors";
 import {trips} from "../../models/trips";
 import {BaseController} from "./base";
 
