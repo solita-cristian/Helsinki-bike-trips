@@ -4,7 +4,7 @@ import '../base'
 import {IError} from "../../src/models/errors";
 import {verifyError} from "../base";
 import {StationsPage} from "../../src/models/page";
-import {AddressLanguage, NameLanguage, StationParameters} from "../../src/models/stationParameters";
+import {AddressLanguage, NameLanguage, StationParameters} from "../../src/models/parameters/stationParameters";
 
 const buildQueryParameters = (parameters: StationParameters) => {
     let queryParameters = '';
@@ -105,8 +105,8 @@ describe("Stations", () => {
                 'Badly formatted parameter',
                 'A required missing parameter is badly formatted',
                 response.statusCode,
-                `The parameter per_page has value ${parameters.perPage}. ` +
-                `Expected 1 <= per_page <= 457`, //TODO: resolve hardcoded value with database value
+                `The parameter perPage has value ${parameters.perPage}. ` +
+                `Expected 1 <= perPage <= 457`, //TODO: resolve hardcoded value with database value
                 fullUrl
             );
         })
@@ -123,7 +123,7 @@ describe("Stations", () => {
                 'Badly formatted parameter',
                 'A required missing parameter is badly formatted',
                 response.statusCode,
-                `The parameter per_page has value ${undefined}. Expected 1 <= per_page <= 457`,
+                `The parameter perPage has value ${undefined}. Expected 1 <= perPage <= 457`,
                 fullUrl
             );
         })

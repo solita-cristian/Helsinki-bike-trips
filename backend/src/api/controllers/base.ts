@@ -1,6 +1,7 @@
-import {Repository} from "typeorm";
+import {Repository, SelectQueryBuilder} from "typeorm";
 import {BadParameterError, Error, NotFoundError} from "../../models/errors";
 import {Request, Response} from "express";
+import {BaseParameters} from "../../models/parameters/base";
 
 /**
  * Defines a base API route controller
@@ -64,5 +65,25 @@ export class BaseController<Entity> {
         )
         return this.sendError(res, notFoundError);
     }
+
+    /**
+     * Enables the builder to paginate the query results
+     * @param req The request
+     * @param res The response
+     * @param parameters The parameters object, which contains the `page` and `perPage` properties.
+     * @param builder The query builder
+     * @param maxPerPage The maximum amount of items per page.
+     */
+    paginate<T>(req: Request, res: Response, parameters: BaseParameters, builder: SelectQueryBuilder<T>, maxPerPage: number) {
+        if (!parameters.page || parameters.page < 1)
+            return -1;
+        else if (!parameters.perPage || parameters.perPage < 1 || parameters.perPage > maxPerPage)
+            return -2
+
+        builder.offset((parameters.page - 1) * parameters.perPage)
+        builder.limit(parameters.perPage)
+        return 0;
+    }
+
 
 }
