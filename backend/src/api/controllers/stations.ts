@@ -3,7 +3,7 @@ import {AppDataSource} from "../../database";
 import {stations} from "../../models/stations";
 import {BaseController} from "./base";
 import {StationsPage} from "../../models/page";
-import {AddressLanguage, NameLanguage, StationParameters} from "../../models/stationParameters";
+import {AddressLanguage, NameLanguage, StationParameters} from "../../models/parameters/station";
 import {StationStatistics} from "../../models/stationStatistics";
 
 
@@ -27,49 +27,42 @@ export class StationsController extends BaseController<stations> {
      *
      * The stations are fetched using pagination, using the **required** query parameters `page` and `per_page`.
      *
-     * The stations can be sorted with the `sort` **optional** query parameter, which accepts 'asc' or 'desc'.
+     * The stations can be searched.
      */
     getStations = () => {
         return async (req: Request, res: Response) => {
-            const parameters = req.query as StationParameters
+            const parameters = req.query as StationParameters;
 
             const stationsCount = await this.getStationsCount();
 
-            if (!parameters.page || parameters.page < 1)
-                return this.badParameterError(req, res, 'page', parameters.page, '>= 1');
-            else if (!parameters.perPage ||
-                parameters.perPage < 1 ||
-                parameters.perPage > stationsCount
-            )
-                return this.badParameterError(
-                    req,
-                    res,
-                    'per_page',
-                    parameters.perPage,
-                    `1 <= per_page <= ${stationsCount}`);
-
             const builder = this.repository.createQueryBuilder('getAllStations').cache(true);
 
-            // Since this evaluates to true, I don't have to add cumbersome logic for adding where clauses.
-            builder.where('1=1')
+            switch (this.paginate<stations>(req, res, parameters, builder, stationsCount)) {
+                case -1:
+                    return this.badParameterError(req, res, 'page', parameters.page, '>= 1');
+                case -2:
+                    return this.badParameterError(req, res, 'perPage', parameters.perPage, `1 <= perPage <= ${stationsCount}`);
+                default:
+                    break;
+            }
 
             if (parameters.city) {
                 if (!Object.values(AddressLanguage).includes(parameters.city[1]))
-                    return this.badParameterError(req, res, 'city', parameters.city, 'language in [fi, se]')
+                    return this.badParameterError(req, res, 'city', parameters.city, 'language in [fi, se]');
                 builder.andWhere(`city_${parameters.city[1]} = :city`,
                     {city: parameters.city[0]});
             }
 
             if (parameters.address) {
                 if (!Object.values(AddressLanguage).includes(parameters.address[1]))
-                    return this.badParameterError(req, res, 'address', parameters.address, 'language in [fi, se]')
+                    return this.badParameterError(req, res, 'address', parameters.address, 'language in [fi, se]');
                 builder.andWhere(`address_${parameters.address[1]} like :address`,
                     {address: `%${parameters.address[0]}%`});
             }
 
             if (parameters.name) {
                 if (!Object.values(NameLanguage).includes(parameters.name[1]))
-                    return this.badParameterError(req, res, 'name', parameters.address, 'language in [fi, se, en]')
+                    return this.badParameterError(req, res, 'name', parameters.address, 'language in [fi, se, en]');
                 builder.andWhere(`name_${parameters.name[1]} = :name`,
                     {name: parameters.name[0]});
             }
@@ -85,15 +78,10 @@ export class StationsController extends BaseController<stations> {
                     {capacity: parameters.capacity});
             }
 
-            // Define where the query starts fetching data. Default is 0 = start of the table
-            builder.offset((parameters.page - 1) * parameters.perPage)
-            // Limit the number of returned values to perPage
-            builder.limit(parameters.perPage)
-
             this.sendResult(res, new StationsPage(
                 await builder.getMany(),
-                parameters.page,
-                parameters.perPage
+                parameters.page!,
+                parameters.perPage!
             ))
         }
     }

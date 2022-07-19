@@ -7,18 +7,46 @@ get:
   produces:
     - "application/json"
   parameters:
-    - name: "cursor"
+    - name: "page"
       in: "query"
       required: true
       type: "integer"
-      format: "int64"
-      description: "The cursor position, used to fetch the next chunk of trips"
+      description: "Fetches only the items contained in the specified page"
+    - name: "perPage"
+      in: "query"
+      required: true
+      type: "integer"
+      description: "How many items per page will get fetched"
+    - name: "departure"
+      in: "query"
+      required: false
+      type: "integer"
+      description: "The starting station"
+    - name: "return"
+      in: "query"
+      required: false
+      type: "integer"
+      description: "The ending station"
+    - name: "distance"
+      in: "query"
+      required: false
+      type: "number"
+      format: "float"
+      description: "The covered distance in km."
+    - name: "duration"
+      in: "query"
+      required: false
+      type: "number"
+      format: "float"
+      description: "The duration of the trip in seconds"
   responses:
     200:
       description: "successful operation"
       schema:
-        $ref: './../schemas/trip.yaml'
+        type: "array"
+        items:
+          $ref: "./../schemas/trip.yaml"
     400:
-      description: "Invalid cursor"
+      description: "badly formatted or missing query parameters"
       schema:
-        $ref: './../schemas/error.yaml'
+        $ref: "./../schemas/error.yaml"
