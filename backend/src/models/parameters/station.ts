@@ -27,7 +27,7 @@ export class StationParameters extends BaseParameters {
     public operator?: string;
     public capacity?: number;
 
-    constructor(page: number, perPage: number, city?: [string, AddressLanguage], name?: [string, NameLanguage],
+    constructor(page?: number, perPage?: number, city?: [string, AddressLanguage], name?: [string, NameLanguage],
                 address?: [string, AddressLanguage], operator?: string, capacity?: number) {
         super(page, perPage);
         this.capacity = capacity;
