@@ -57,6 +57,6 @@ get:
         items:
           $ref: "./../schemas/station_page.yaml"
     "400":
-      description: "badly formatted or missing page, perPage parameters"
+      description: "badly formatted or missing query parameters"
       schema:
         $ref: "./../schemas/error.yaml"
