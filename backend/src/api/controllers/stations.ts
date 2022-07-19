@@ -3,7 +3,7 @@ import {AppDataSource} from "../../database";
 import {stations} from "../../models/stations";
 import {BaseController} from "./base";
 import {StationsPage} from "../../models/page";
-import {AddressLanguage, NameLanguage, StationParameters} from "../../models/parameters/stationParameters";
+import {AddressLanguage, NameLanguage, StationParameters} from "../../models/parameters/station";
 import {StationStatistics} from "../../models/stationStatistics";
 
 
@@ -27,7 +27,7 @@ export class StationsController extends BaseController<stations> {
      *
      * The stations are fetched using pagination, using the **required** query parameters `page` and `per_page`.
      *
-     * The stations can be sorted with the `sort` **optional** query parameter, which accepts 'asc' or 'desc'.
+     * The stations can be searched.
      */
     getStations = () => {
         return async (req: Request, res: Response) => {
@@ -45,10 +45,6 @@ export class StationsController extends BaseController<stations> {
                 default:
                     break;
             }
-
-            // Since this evaluates to true, I don't have to add cumbersome logic for adding where clauses and can just use
-            // typeORM's andWhere clause to chain all the searching parameters together.
-            builder.where('1=1');
 
             if (parameters.city) {
                 if (!Object.values(AddressLanguage).includes(parameters.city[1]))

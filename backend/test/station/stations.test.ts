@@ -4,7 +4,7 @@ import '../base'
 import {IError} from "../../src/models/errors";
 import {verifyError} from "../base";
 import {StationsPage} from "../../src/models/page";
-import {AddressLanguage, NameLanguage, StationParameters} from "../../src/models/parameters/stationParameters";
+import {AddressLanguage, NameLanguage, StationParameters} from "../../src/models/parameters/station";
 
 const buildQueryParameters = (parameters: StationParameters) => {
     let queryParameters = '';
