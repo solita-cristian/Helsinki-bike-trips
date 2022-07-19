@@ -1,10 +1,10 @@
 import {Request, Response} from "express";
 import {AppDataSource} from "../../database";
 import {stations} from "../../models/stations";
-import {trips} from "../../models/trips";
 import {BaseController} from "./base";
 import {StationsPage} from "../../models/page";
-import {StationParameters} from "../../models/stationParameters";
+import {AddressLanguage, NameLanguage, StationParameters} from "../../models/stationParameters";
+import {StationStatistics} from "../../models/stationStatistics";
 
 
 /**
@@ -66,21 +66,37 @@ export class StationsController extends BaseController<stations> {
             // Since this evaluates to true, I don't have to add cumbersome logic for adding where clauses.
             builder.where('1=1')
 
-            if (parameters.city)
+            if (parameters.city) {
+                if (!Object.values(AddressLanguage).includes(parameters.city[1]))
+                    return this.badParameterError(req, res, 'city', parameters.city, 'language in [fi, se]')
                 builder.andWhere(`city_${parameters.city[1]} = :city`,
                     {city: parameters.city[0]});
-            if (parameters.address)
+            }
+
+            if (parameters.address) {
+                if (!Object.values(AddressLanguage).includes(parameters.address[1]))
+                    return this.badParameterError(req, res, 'address', parameters.address, 'language in [fi, se]')
                 builder.andWhere(`address_${parameters.address[1]} like :address`,
                     {address: `%${parameters.address[0]}%`});
+            }
+
+            if(parameters.name) {
+                if (!Object.values(NameLanguage).includes(parameters.name[1]))
+                    return this.badParameterError(req, res, 'name', parameters.address, 'language in [fi, se, en]')
+                builder.andWhere(`name_${parameters.name[1]} = :name`,
+                    {name: parameters.name[0]});
+            }
+
             if (parameters.operator)
                 builder.andWhere(`operator like :operator`,
                     {operator: `%${parameters.operator}%`});
-            if (parameters.capacity)
+
+            if (parameters.capacity) {
+                if (parameters.capacity < 0)
+                    return this.badParameterError(req, res, 'capacity', parameters.capacity, '>= 0')
                 builder.andWhere(`capacity = :capacity`,
                     {capacity: parameters.capacity});
-            if(parameters.name)
-                builder.andWhere(`name_${parameters.name[1]} = :name`,
-                    {name: parameters.name[0]});
+            }
 
             // Define where the query starts fetching data. Default is 0 = start of the table
             builder.offset((parameters.page - 1) * parameters.perPage)
