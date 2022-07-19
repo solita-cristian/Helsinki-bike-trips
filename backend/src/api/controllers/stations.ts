@@ -30,6 +30,7 @@ export class StationsController extends BaseController<stations> {
     getStationsCount = async () => {
         return await this.repository
             .createQueryBuilder('getStationsCount')
+            .cache(true)
             .getCount();
 }
 
@@ -43,57 +44,53 @@ export class StationsController extends BaseController<stations> {
      */
     getStations = () => {
         return async (req: Request, res: Response) => {
-            const {page, per_page} = req.query;
+            const parameters = req.query as StationParameters
 
             const stationsCount = await this.getStationsCount();
 
-            if (!page || parseInt(page as string) < 1)
-                return this.badParameterError(req, res, 'page', page, '>= 1');
-            else if(!per_page ||
-                parseInt(per_page as string) < 1 ||
-                parseInt(per_page as string) > stationsCount
+            if (!parameters.page || parameters.page < 1)
+                return this.badParameterError(req, res, 'page', parameters.page, '>= 1');
+            else if(!parameters.perPage ||
+                parameters.perPage < 1 ||
+                parameters.perPage > stationsCount
             )
                 return this.badParameterError(
                     req,
                     res,
                     'per_page',
-                    per_page,
+                    parameters.perPage,
                     `1 <= per_page <= ${stationsCount}`);
 
             const builder = this.repository.createQueryBuilder('getAllStations').cache(true);
 
-            if(req.method === 'POST') {
-                const parameters = req.body as StationParameters
+            // Since this evaluates to true, I don't have to add cumbersome logic for adding where clauses.
+            builder.where('1=1')
 
-                // Since this evaluates to true, I don't have to add cumbersome logic for adding where clauses.
-                builder.where('1=1')
-
-                if (parameters.city != undefined)
-                    builder.andWhere(`city_${parameters.city[1]} = :city`,
-                        {city: parameters.city[0]});
-                if (parameters.address != undefined)
-                    builder.andWhere(`address_${parameters.address[1]} like :address`,
-                        {address: `%${parameters.address[0]}%`});
-                if (parameters.operator != undefined)
-                    builder.andWhere(`operator like :operator`,
-                        {operator: `%${parameters.operator}%`});
-                if (parameters.capacity != undefined)
-                    builder.andWhere(`capacity = :capacity`,
-                        {capacity: parameters.capacity});
-            }
-
-            const iPage: number = parseInt(req.query.page as any);
-            const perPage: number = parseInt(req.query.per_page as any);
+            if (parameters.city)
+                builder.andWhere(`city_${parameters.city[1]} = :city`,
+                    {city: parameters.city[0]});
+            if (parameters.address)
+                builder.andWhere(`address_${parameters.address[1]} like :address`,
+                    {address: `%${parameters.address[0]}%`});
+            if (parameters.operator)
+                builder.andWhere(`operator like :operator`,
+                    {operator: `%${parameters.operator}%`});
+            if (parameters.capacity)
+                builder.andWhere(`capacity = :capacity`,
+                    {capacity: parameters.capacity});
+            if(parameters.name)
+                builder.andWhere(`name_${parameters.name[1]} = :name`,
+                    {name: parameters.name[0]});
 
             // Define where the query starts fetching data. Default is 0 = start of the table
-            builder.offset((iPage - 1) * perPage)
+            builder.offset((parameters.page - 1) * parameters.perPage)
             // Limit the number of returned values to perPage
-            builder.limit(perPage)
+            builder.limit(parameters.perPage)
 
             this.sendResult(res, new StationsPage(
                 await builder.getMany(),
-                iPage,
-                perPage
+                parameters.page,
+                parameters.perPage
             ))
         }
     }
@@ -247,6 +244,5 @@ const stationsController = new StationsController()
 
 export const getAllStations = stationsController.getStations()
 export const getStation = stationsController.getStation()
-export const searchStations = getAllStations;
 //export const searchStations = stationsController.getStations()
 export const getStationStatistics = stationsController.getStatistics()

@@ -14,5 +14,7 @@ export interface StationParameters {
     name?: [string, CityLanguage],
     address?: [string, AddressLanguage],
     operator?: string,
-    capacity?: number
+    capacity?: number,
+    page?: number,
+    perPage?: number
 }

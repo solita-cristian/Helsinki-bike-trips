@@ -6,37 +6,20 @@ import {verifyError} from "../base";
 import {StationsPage} from "../../src/models/page";
 import {AddressLanguage, CityLanguage, StationParameters} from "../../src/models/stationParameters";
 
-interface IStationsParameters {
-    page?: number,
-    perPage?: number,
-    sort?: string
+const buildQueryParameters = (parameters: StationParameters) => {
+    let queryParameters = '';
+    for (const [key, value] of Object.entries(parameters)) {
+        if (value != undefined)
+            if (['city', 'name', 'address'].includes(key))
+                queryParameters += `${key}=${value[0]}&${key}=${value[1]}&`
+            else
+                queryParameters += `${key}=${value}&`;
+    }
+    console.log(queryParameters);
+    return queryParameters;
 }
 
-const buildQueryParameters = (parameters: IStationsParameters) => {
-    const page = parameters.page != undefined ? `page=${parameters.page}` : '';
-    const per_page = parameters.perPage != undefined ? `per_page=${parameters.perPage}` : '';
-    const sort = parameters.sort != undefined ? `sort=${parameters.sort}` : '';
-
-    const pagination =
-        page != '' && per_page != '' ?
-            `${page}&${per_page}` :
-            page != '' ?
-                page :
-                per_page != '' ?
-                    per_page :
-                        '';
-
-    return sort != '' && pagination != '' ?
-        `${sort}&${pagination}` :
-        sort != '' ?
-            sort :
-            pagination != '' ?
-                pagination :
-                '';
-
-}
-
-const makeRequestWithParameters = async (baseUrl: string, parameters: IStationsParameters, body?: any, method = 'get') => {
+const makeRequestWithParameters = async (baseUrl: string, parameters: StationParameters, body?: any, method = 'get') => {
     const params = buildQueryParameters(parameters);
     const url = `${baseUrl}?${params}`
     let response;
@@ -164,15 +147,13 @@ describe("Stations", () => {
         })
 
     test('Should return a list of station satisfying city parameter', async () => {
-        const queryParameters = {
+        const parameters: StationParameters = {
+            city: ['Espoo', CityLanguage.FI],
             page: page,
             perPage: per_page
         }
-        const stationParameters: StationParameters = {
-            city: ['Espoo', CityLanguage.FI]
-        }
 
-        const {response} = await makeRequestWithParameters(url, queryParameters, stationParameters, 'post');
+        const {response} = await makeRequestWithParameters(url, parameters);
         expect(response.statusCode).toEqual(200);
 
         const stations: StationsPage = response.body;
@@ -182,15 +163,13 @@ describe("Stations", () => {
     })
 
     test('Should return a list of station satisfying address parameter', async () => {
-        const queryParameters = {
+        const parameters: StationParameters = {
+            address: ['Gallen-Kallelas', AddressLanguage.SE],
             page: page,
             perPage: per_page
         }
-        const stationParameters: StationParameters = {
-            address: ['Gallen-Kallelas', AddressLanguage.SE]
-        }
 
-        const {response} = await makeRequestWithParameters(url, queryParameters, stationParameters, 'post');
+        const {response} = await makeRequestWithParameters(url, parameters);
         expect(response.statusCode).toEqual(200);
 
         const stations: StationsPage = response.body;
@@ -200,15 +179,12 @@ describe("Stations", () => {
     })
 
     test('Should return a list of station satisfying capacity parameter', async () => {
-        const queryParameters = {
+        const parameters: StationParameters = {
+            capacity: 10,
             page: page,
             perPage: per_page
         }
-        const stationParameters: StationParameters = {
-            capacity: 10
-        }
-
-        const {response} = await makeRequestWithParameters(url, queryParameters, stationParameters, 'post');
+        const {response} = await makeRequestWithParameters(url, parameters);
         expect(response.statusCode).toEqual(200);
 
         const stations: StationsPage = response.body;
@@ -218,15 +194,12 @@ describe("Stations", () => {
     })
 
     test('Should return a list of station satisfying operator parameter', async () => {
-        const queryParameters = {
+        const parameters: StationParameters = {
+            operator: "CityBike",
             page: page,
             perPage: per_page
         }
-        const stationParameters: StationParameters = {
-            operator: "CityBike"
-        }
-
-        const {response} = await makeRequestWithParameters(url, queryParameters, stationParameters, 'post');
+        const {response} = await makeRequestWithParameters(url, parameters);
         expect(response.statusCode).toEqual(200);
 
         const stations: StationsPage = response.body;
@@ -236,15 +209,13 @@ describe("Stations", () => {
     })
 
     test('Should return a list of station satisfying name parameter', async () => {
-        const queryParameters = {
+        const parameters: StationParameters = {
+            name: ['Sepetlahdentie', CityLanguage.FI],
             page: page,
             perPage: per_page
         }
-        const stationParameters: StationParameters = {
-            name: ['Sepetlahdentie', CityLanguage.FI]
-        }
 
-        const {response} = await makeRequestWithParameters(url, queryParameters, stationParameters, 'post');
+        const {response} = await makeRequestWithParameters(url, parameters);
         expect(response.statusCode).toEqual(200);
 
         const stations: StationsPage = response.body;
@@ -254,17 +225,15 @@ describe("Stations", () => {
     })
 
     test('Should return a list of station satisfying multiple parameters', async () => {
-        const queryParameters = {
-            page: page,
-            perPage: per_page
-        }
-        const stationParameters: StationParameters = {
+        const parameters: StationParameters = {
             name: ['Framnäsvägen', CityLanguage.SE],
             address: ['Kalastajantie 6', AddressLanguage.Fi],
             operator: "CityBike",
+            page: page,
+            perPage: per_page
         }
 
-        const {response} = await makeRequestWithParameters(url, queryParameters, stationParameters, 'post');
+        const {response} = await makeRequestWithParameters(url, parameters);
         expect(response.statusCode).toEqual(200);
 
         const stations: StationsPage = response.body;
