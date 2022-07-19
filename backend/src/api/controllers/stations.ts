@@ -127,68 +127,6 @@ export class StationsController extends BaseController<stations> {
     }
 
     /**
-     * Returns the average distance of the trips.
-     * @param trips A list of trips
-     */
-    private getAverageDistance = (trips: trips[]) => {
-        const sumDistances = (accumulatedTotal: number, currentDistance: number) => {
-            return accumulatedTotal + currentDistance;
-        }
-
-        return parseFloat((trips
-                    .map(t => t.distance)
-                    .reduce(sumDistances, 0)/trips.length)
-                    .toFixed(2))
-}
-
-    /**
-     * Fetches the top 5 stations which start or finish at the requested station.
-     *
-     * @param outbound A boolean value indicating if the stations are the starting or ending point of the trip
-     * @param month The month of the year. Used to filter the trips by month. If set to `null` will fetch all trips.
-     * @param stationId The ID of the requested station
-     */
-    private getTopStations = async (outbound: boolean, month: number | null, stationId: string) => {
-        const station = (outbound ? 'return' : 'departure') + '_station';
-        const opp_station = (outbound ? 'departure' : 'return') + '_station';
-        const trips_repository = AppDataSource.getRepository('trips')
-
-        return (await trips_repository
-            .createQueryBuilder('getTopStations')
-            .select(`${station}, COUNT(*) as total`)
-            .where(`${month ? `extract(MONTH from departure_time) = :month and` : ''} ${opp_station} = :stationId`,
-                {month: month, stationId: parseInt(stationId)})
-            .groupBy(`${station}`)
-            .orderBy('total', 'DESC')
-            .cache(true)
-            .getRawMany<stations>()).slice(0, 5);
-    }
-
-    /**
-     * Encapsulated a mapping function which will generate all the statistics for a station.
-     *
-     * @param outbound_trips The station's outbound trips
-     * @param inbound_trips The station's inbound trips
-     * @param stationId The ID of the station
-     */
-    private calculateStatisticsPerMonth = (outbound_trips: trips[], inbound_trips: trips[], stationId: string) =>
-        async (month: number) => {
-            const outbound = outbound_trips.filter(t => t.departure_time.getMonth() === month);
-            const inbound = inbound_trips.filter(t => t.departure_time.getMonth() === month);
-            const average_distance_inbound = this.getAverageDistance(inbound)
-            const average_distance_outbound = this.getAverageDistance(outbound)
-
-            return {
-                total_inbound: inbound.length,
-                total_outbound: outbound.length,
-                average_distance_inbound,
-                average_distance_outbound,
-                top_outbound: await this.getTopStations(true, month + 1, stationId),
-                top_inbound: await this.getTopStations(false, month + 1, stationId)
-            }
-        }
-
-    /**
      * Returns the statistics concerning a station, given its ID, divided pe month, as well as considering the whole.
      *
      * The statistics are:
@@ -203,50 +141,19 @@ export class StationsController extends BaseController<stations> {
     getStatistics = () => {
         return async (req: Request, res: Response) => {
             const {stationId} = req.params;
-            const month = req.query.month
+            const month = req.query.month;
+            const station = await this.getStationById(stationId);
+
+            if (!station)
+                return this.notFoundError(req, res, 'station', 'ID', stationId);
 
             if (month) {
                 let m = parseInt(month as any)
-                if(m < 1 || m > 12)
+                if (m < 1 || m > 12)
                     return this.badParameterError(req, res, 'month', m, '1 <= month <= 12')
-            }
-
-            const station = await this.getStationById(stationId)
-
-            let outbound_trips = await (station as stations).outbound_trips;
-            let inbound_trips = await (station as stations).inbound_trips;
-
-            const average_distance_inbound = this.getAverageDistance(inbound_trips)
-            const average_distance_outbound = this.getAverageDistance(outbound_trips)
-
-            /**
-             * If `month` is set, then calculate the statistics only for that month, otherwise calculate the statistics
-             * for the whole year.
-             */
-            const stats = await Promise.all(
-                (month ?
-                    [parseInt(month as any) - 1] :
-                    [...Array(12).keys()])
-                .map(this.calculateStatisticsPerMonth(outbound_trips, inbound_trips, stationId))
-            )
-
-            /**
-             * If `month` is not set, to the calculation per month, add the totals, otherwise just send the result of
-             * that particular month.
-             */
-            res.status(200).json(
-                !month ? { total : {
-                    total_inbound: inbound_trips.length,
-                    total_outbound: outbound_trips.length,
-                    average_distance_inbound,
-                    average_distance_outbound,
-                    top_outbound: await this.getTopStations(true, null, stationId),
-                    top_inbound: await this.getTopStations(false, null, stationId)
-                },
-                monthly: [...stats]} :
-                stats
-            )
-
+                this.sendResult(res, await StationStatistics.create(station, m))
+            } else
+                this.sendResult(res, await StationStatistics.create(station, null))
         }
     }
 
