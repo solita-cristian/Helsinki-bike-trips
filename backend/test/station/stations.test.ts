@@ -4,7 +4,7 @@ import '../base'
 import {IError} from "../../src/models/errors";
 import {verifyError} from "../base";
 import {StationsPage} from "../../src/models/page";
-import {AddressLanguage, CityLanguage, StationParameters} from "../../src/models/stationParameters";
+import {AddressLanguage, NameLanguage, StationParameters} from "../../src/models/stationParameters";
 
 const buildQueryParameters = (parameters: StationParameters) => {
     let queryParameters = '';
@@ -148,7 +148,7 @@ describe("Stations", () => {
 
     test('Should return a list of station satisfying city parameter', async () => {
         const parameters: StationParameters = {
-            city: ['Espoo', CityLanguage.FI],
+            city: ['Espoo', AddressLanguage.FI],
             page: page,
             perPage: per_page
         }
@@ -210,7 +210,7 @@ describe("Stations", () => {
 
     test('Should return a list of station satisfying name parameter', async () => {
         const parameters: StationParameters = {
-            name: ['Sepetlahdentie', CityLanguage.FI],
+            name: ['Sepetlahdentie', NameLanguage.FI],
             page: page,
             perPage: per_page
         }
@@ -226,8 +226,8 @@ describe("Stations", () => {
 
     test('Should return a list of station satisfying multiple parameters', async () => {
         const parameters: StationParameters = {
-            name: ['Framnäsvägen', CityLanguage.SE],
-            address: ['Kalastajantie 6', AddressLanguage.Fi],
+            name: ['Framnäsvägen', NameLanguage.SE],
+            address: ['Kalastajantie 6', AddressLanguage.FI],
             operator: "CityBike",
             page: page,
             perPage: per_page
