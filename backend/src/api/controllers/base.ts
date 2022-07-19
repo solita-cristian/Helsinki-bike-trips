@@ -1,13 +1,14 @@
 import {Repository} from "typeorm";
-import {NotFoundError, BadParameterError, Error} from "../../models/errors";
-import {Response, Request} from "express";
+import {BadParameterError, Error, NotFoundError} from "../../models/errors";
+import {Request, Response} from "express";
 
 /**
  * Defines a base API route controller
  */
 export class BaseController<Entity> {
 
-    constructor(protected readonly repository: Repository<Entity>) {}
+    constructor(protected readonly repository: Repository<Entity>) {
+    }
 
     /**
      * Encapsulates error handling for unsuccessful operations
@@ -56,7 +57,7 @@ export class BaseController<Entity> {
      * @param propertyValue The value of the property by which the requested object was not found
      */
     notFoundError = (req: Request, res: Response, what: string, propertyName: string, propertyValue: any) => {
-        const notFoundError = new BadParameterError(
+        const notFoundError = new NotFoundError(
             `${what[0].toUpperCase() + what.substring(1)} not found`,
             `The ${what} with ${propertyName} = ${propertyValue} was not found`,
             req.url

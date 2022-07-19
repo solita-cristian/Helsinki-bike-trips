@@ -15,25 +15,12 @@ export class StationsController extends BaseController<stations> {
         super(AppDataSource.getRepository('stations'));
     }
 
-    /**
-     * Returns a station if it exists, a 404 not found error otherwise
-     * @param stationId The ID of the requested station
-     */
-    private getStationById = async (stationId: string) => {
-        return await this.repository
-            .createQueryBuilder('getStationById')
-            .cache(true)
-            .where('id = :stationId', {stationId: stationId})
-            .getOne();
-    }
-
     getStationsCount = async () => {
         return await this.repository
             .createQueryBuilder('getStationsCount')
             .cache(true)
             .getCount();
-}
-
+    }
 
     /**
      * Returns all stations from the database.
@@ -50,7 +37,7 @@ export class StationsController extends BaseController<stations> {
 
             if (!parameters.page || parameters.page < 1)
                 return this.badParameterError(req, res, 'page', parameters.page, '>= 1');
-            else if(!parameters.perPage ||
+            else if (!parameters.perPage ||
                 parameters.perPage < 1 ||
                 parameters.perPage > stationsCount
             )
@@ -80,7 +67,7 @@ export class StationsController extends BaseController<stations> {
                     {address: `%${parameters.address[0]}%`});
             }
 
-            if(parameters.name) {
+            if (parameters.name) {
                 if (!Object.values(NameLanguage).includes(parameters.name[1]))
                     return this.badParameterError(req, res, 'name', parameters.address, 'language in [fi, se, en]')
                 builder.andWhere(`name_${parameters.name[1]} = :name`,
@@ -155,6 +142,18 @@ export class StationsController extends BaseController<stations> {
             } else
                 this.sendResult(res, await StationStatistics.create(station, null))
         }
+    }
+
+    /**
+     * Returns a station if it exists, a 404 not found error otherwise
+     * @param stationId The ID of the requested station
+     */
+    private getStationById = async (stationId: string) => {
+        return await this.repository
+            .createQueryBuilder('getStationById')
+            .cache(true)
+            .where('id = :stationId', {stationId: stationId})
+            .getOne();
     }
 
 }

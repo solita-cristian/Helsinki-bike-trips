@@ -1,4 +1,4 @@
-import {Entity, Column, PrimaryGeneratedColumn, OneToMany} from "typeorm";
+import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {trips} from "./trips";
 
 /**
@@ -6,29 +6,29 @@ import {trips} from "./trips";
  */
 @Entity()
 export class stations {
-    @PrimaryGeneratedColumn({type:"int"})
+    @PrimaryGeneratedColumn({type: "int"})
     id: number
-    @Column({type:"varchar", length: 50})
+    @Column({type: "varchar", length: 50})
     name_fi: string
-    @Column({type:"varchar", length: 50})
+    @Column({type: "varchar", length: 50})
     name_se: string
-    @Column({type:"varchar", length: 50})
+    @Column({type: "varchar", length: 50})
     name_en: string
-    @Column({type:"varchar", length: 50})
+    @Column({type: "varchar", length: 50})
     address_fi: string
-    @Column({type:"varchar", length: 50})
+    @Column({type: "varchar", length: 50})
     address_se: string
-    @Column({type:"varchar", nullable:true, length: 20})
+    @Column({type: "varchar", nullable: true, length: 20})
     city_fi: string | undefined
-    @Column({type:"varchar", nullable:true, length: 20})
+    @Column({type: "varchar", nullable: true, length: 20})
     city_se: string | undefined
-    @Column({type:"varchar", nullable:true, length: 20})
+    @Column({type: "varchar", nullable: true, length: 20})
     operator: string | undefined
-    @Column({type:"int", nullable:true})
+    @Column({type: "int", nullable: true})
     capacity: number | undefined
     @Column({type: "real"})
     x: number
-    @Column({type:"real"})
+    @Column({type: "real"})
     y: number
 
     /**

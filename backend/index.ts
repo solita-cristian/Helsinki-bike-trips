@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 import {AppDataSource} from "./src/database";
-import {DatabaseLogger} from "./src/logger";
 import {makeApp} from "./src/app";
 
 dotenv.config()
@@ -14,8 +13,8 @@ makeApp()
 
 AppDataSource.initialize()
     .then(async () => {
-        DatabaseLogger.debug('Data source initialised correctly')
+        console.log('Data source initialised correctly')
     })
     .catch((e) => {
-        DatabaseLogger.error(`Data source could not be initialised. ${e}`)
+        console.log(`Data source could not be initialised. ${e}`)
     })
