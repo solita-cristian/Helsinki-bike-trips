@@ -1,6 +1,7 @@
 import {AppDataSource} from "../src/database";
 import {beforeAll, afterEach} from "@jest/globals";
 import {TestLogger} from "../src/logger";
+import {IError} from "../src/models/errors";
 
 // setting a timeout of 20 seconds ensures that the database connection is established.
 jest.setTimeout(20 * 1000)
@@ -18,3 +19,12 @@ afterAll(() => {
     AppDataSource.destroy()
         .then(_ => TestLogger.debug("Database connection closed"))
 })
+
+export const verifyError = (message: IError, id: string, title: string, status: number, detail: string, instance: string) => {
+    expect(message).toBeTruthy();
+    expect(message.id).toEqual(id);
+    expect(message.title).toEqual(title);
+    expect(message.status).toEqual(status);
+    expect(message.detail).toEqual(detail);
+    expect(message.instance).toEqual(instance);
+}

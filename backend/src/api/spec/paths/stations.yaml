@@ -5,10 +5,58 @@ get:
   operationId: "getAllStations"
   produces:
   - "application/json"
+  parameters:
+    - name: "page"
+      in: "query"
+      required: true
+      type: "integer"
+      description: "Fetches only the items contained in the specified page"
+    - name: "perPage"
+      in: "query"
+      required: true
+      type: "integer"
+      description: "How many items per page will get fetched"
+    - name: "city"
+      in: "query"
+      description: "An array containing the city name and the specified language [fi, se]"
+      type: "array"
+      items:
+        type: "string"
+      collectionFormat: multi
+      required: false
+    - name: "address"
+      in: "query"
+      description: "An array containing the address and the specified language [fi, se]"
+      type: "array"
+      items:
+        type: "string"
+      collectionFormat: multi
+      required: false
+    - name: "operator"
+      in: "query"
+      type: "string"
+      description: "The operator"
+    - name: "capacity"
+      in: "query"
+      type: "integer"
+      description: "The capacity of the station"
+      required: false
+    - name: "name"
+      in: "query"
+      description: "An array containing the name of the station and the specified language [fi, se, en]"
+      type: "array"
+      items:
+        type: "string"
+      collectionFormat: multi
+      required: false
   responses:
     "200":
       description: "successful operation"
       schema:
         type: "array"
         items:
-          $ref: "./../schemas/station.yaml"
+          $ref: "./../schemas/station_page.yaml"
+    "400":
+      description: "badly formatted or missing page, perPage parameters"
+      schema:
+        $ref: "./../schemas/error.yaml"

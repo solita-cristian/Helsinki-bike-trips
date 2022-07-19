@@ -7,8 +7,6 @@ import {trips} from "./trips";
 @Entity()
 export class stations {
     @PrimaryGeneratedColumn({type:"int"})
-    fid: number
-    @Column({type:"int", unique: true})
     id: number
     @Column({type:"varchar", length: 50})
     name_fi: string
@@ -38,12 +36,12 @@ export class stations {
      * An inbound trip is a trip whose destination is this station
      */
     @OneToMany(() => trips, (trip) => trip.return_station)
-    inbound_trips: trips[]
+    inbound_trips: Promise<trips[]>
 
     /**
      * Models a one-to-many relationship with outbound trips.
      * An outbound trip is a trip whose start is this station
      */
     @OneToMany(() => trips, (trip) => trip.departure_station)
-    outbound_trips: trips[]
+    outbound_trips: Promise<trips[]>
 }

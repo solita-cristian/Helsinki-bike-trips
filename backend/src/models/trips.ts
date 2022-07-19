@@ -18,10 +18,10 @@ export class trips {
     duration: number
 
     @ManyToOne(() => stations, (station) => station.outbound_trips)
-    @JoinColumn({referencedColumnName:'id', name: 'departure_station', foreignKeyConstraintName: 'departure_station_fk'})
+    @JoinColumn({name:"departure_station", referencedColumnName: 'id'})
     departure_station: stations
 
     @ManyToOne(() => stations, (station) => station.inbound_trips)
-    @JoinColumn({referencedColumnName:'id', name: 'return_station', foreignKeyConstraintName: 'return_station_fk'})
+    @JoinColumn({name:"return_station", referencedColumnName: 'id'})
     return_station: stations
 }

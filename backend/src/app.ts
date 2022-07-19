@@ -7,6 +7,7 @@ import {connector} from 'swagger-routes-express'
 const apiControllers = require('./api')
 import {setup, serve} from 'swagger-ui-express'
 import cors from 'cors';
+import {pagination} from "typeorm-pagination";
 
 dotenv.config()
 
@@ -20,6 +21,7 @@ export const makeApp = async () => {
     app.use(express.json());
     app.use(express.urlencoded({extended: true}));
     app.use(cors())
+    app.use(pagination)
 
     // Error handling middleware
     app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

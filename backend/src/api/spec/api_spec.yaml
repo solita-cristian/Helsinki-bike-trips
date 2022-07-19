@@ -26,3 +26,5 @@ definitions:
     $ref: './schemas/statistics.yaml'
   error:
     $ref: './schemas/error.yaml'
+  station page:
+    $ref: './schemas/station_page.yaml'
