@@ -1,4 +1,5 @@
 import {stations} from "./stations";
+import {trips} from "./trips";
 
 interface IPage<T> {
     data: T[]
@@ -19,4 +20,7 @@ abstract class Page<T> implements IPage<T> {
 }
 
 export class StationsPage extends Page<stations> {
+}
+
+export class TripsPage extends Page<trips> {
 }
