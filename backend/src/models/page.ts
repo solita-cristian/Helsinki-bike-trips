@@ -11,10 +11,10 @@ abstract class Page<T> implements IPage<T>{
     public page: number;
     public perPage: number;
 
-    constructor(data: T[], page: number, perPage: number) {
+    constructor(data: T[], page: number | string, perPage: number | string) {
         this.data = data;
-        this.page = page;
-        this.perPage = perPage
+        this.page = (typeof page === "string" ? parseInt(page) : page);
+        this.perPage = (typeof perPage === "string" ? parseInt(perPage) : perPage);
     }
 }
 
