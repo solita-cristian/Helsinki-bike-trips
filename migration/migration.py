@@ -35,6 +35,7 @@ stations = []
 
 # Read all stations and override the header
 with open(stations_file, mode="r") as s:
+    print("Reading stations")
     rows = csv.DictReader(s)
 
     for r in rows:
@@ -56,6 +57,7 @@ with open(stations_file, mode="r") as s:
         })
 
 with open(stations_file, mode="w") as s:
+    print("Writing stations")
     writer = csv.DictWriter(s, fieldnames=stations_header)
     writer.writeheader()
     writer.writerows(stations)
@@ -67,6 +69,7 @@ with open("trips.csv", mode="w") as ts:
 
     for trip in trip_files:
         with open(trip, mode="r") as t:
+            print(f"Writing trips from {trip}")
             rows = csv.DictReader(t)
 
             for r in rows:
