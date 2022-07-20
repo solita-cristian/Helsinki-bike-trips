@@ -1,13 +1,11 @@
-import express, {Express, NextFunction, Request, Response} from 'express';
+import express, {Express} from 'express';
 import dotenv from 'dotenv';
-import { StatusCodes } from 'http-status-codes';
-import {ApplicationLogger} from "./logger";
-const SwaggerParser = require('swagger-parser')
 import {connector} from 'swagger-routes-express'
-const apiControllers = require('./api')
-import {setup, serve} from 'swagger-ui-express'
+import {serve, setup} from 'swagger-ui-express'
 import cors from 'cors';
-import {pagination} from "typeorm-pagination";
+
+const SwaggerParser = require('swagger-parser')
+const apiControllers = require('./api')
 
 dotenv.config()
 
@@ -21,15 +19,6 @@ export const makeApp = async () => {
     app.use(express.json());
     app.use(express.urlencoded({extended: true}));
     app.use(cors())
-    app.use(pagination)
-
-    // Error handling middleware
-    app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-        ApplicationLogger.error(`An error has occurred during request ${req.route}: ${err}`)
-       return res.status(StatusCodes.BAD_REQUEST).json({
-           error: err.message,
-       });
-    });
 
     app.use('/api-docs', serve, setup(apiDefinitions))
 
