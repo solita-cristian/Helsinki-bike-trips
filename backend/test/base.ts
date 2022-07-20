@@ -6,10 +6,16 @@ import {Page, StationsPage} from "../src/models/page";
 import {StationParameters} from "../src/models/parameters/station";
 import {AppDataSource} from "../src/database";
 
+/**
+ * Defines a base test instance, which abstracts the request call, the url buildup and some repetitive checks
+ */
 export abstract class BaseTestInstance {
     protected constructor(protected instanceName: string, protected baseUrl: string) {
     }
 
+    /**
+     * Gets the maximum amount of items a page can contain
+     */
     maxPerPage = async () => {
         return await AppDataSource.getRepository(this.instanceName)
             .createQueryBuilder('getCount')
@@ -17,6 +23,13 @@ export abstract class BaseTestInstance {
             .getCount();
     }
 
+    /**
+     * Makes an HTTP request
+     * @param requestParameter A request parameter or partial url
+     * @param parameters a structure containing the query parameters of the request
+     * @param body The body of the request
+     * @param method The method of the request
+     */
     makeRequestWithParameters = async (requestParameter?: string | number, parameters?: BaseParameters, body?: any, method = 'get') => {
         const params = this.buildQueryParameters(parameters);
         const url = `${this.baseUrl + (requestParameter ? `/${requestParameter}` : '')}?${params}`
@@ -37,6 +50,15 @@ export abstract class BaseTestInstance {
         };
     }
 
+    /**
+     * Makes assertions of a bad parameter error response
+     * @param error The error instance
+     * @param badParameterName The name of the bad parameter
+     * @param badParameterValue The actual value of the bad parameter
+     * @param expectedBadParameterValue The expected value of the bad parameter
+     * @param instance The URL of the request
+     * @param actualStatusCode The status code of the response
+     */
     verifyBadParameter = (error: IError, badParameterName: string, badParameterValue: any, expectedBadParameterValue: string,
                           instance: string, actualStatusCode: number) => {
         this.verifyError(error,
@@ -48,16 +70,30 @@ export abstract class BaseTestInstance {
         )
     }
 
-    verifyNotFound = (error: IError, actualStatusCode: number, instance: string, property: string, propertyValue: any) => {
+    /**
+     * Makes assertions of a bad parameter error response
+     * @param error The error instance
+     * @param actualStatusCode The status code of the response
+     * @param instance The URL of the request
+     * @param parameterName The name of the parameter which lead to the failure of the request
+     * @param parameterValue The value of the parameter
+     */
+    verifyNotFound = (error: IError, actualStatusCode: number, instance: string, parameterName: string, parameterValue: any) => {
         this.verifyError(error,
             'Not found',
             `${this.instanceName} not found`,
             actualStatusCode,
-            `The ${this.instanceName} with ${property} = ${propertyValue} was not found`,
+            `The ${this.instanceName} with ${parameterName} = ${parameterValue} was not found`,
             instance
         )
     }
 
+    /**
+     * Makes assertions on a page
+     * @param stationsPage The page object
+     * @param page The expected page number
+     * @param perPage The expected number of items per page
+     */
     verifyPage<T>(stationsPage: Page<T>, page: number, perPage: number) {
         expect(stationsPage).toBeTruthy();
         expect(typeof stationsPage.page).toBe('number')
@@ -68,6 +104,10 @@ export abstract class BaseTestInstance {
         expect(stationsPage.data).toHaveLength(perPage);
     }
 
+    /**
+     * Builds the query string, based on a parameters object
+     * @param parameters The parameters object
+     */
     protected buildQueryParameters = (parameters?: BaseParameters) => {
         let queryParameters = '';
         if (parameters)
@@ -78,6 +118,15 @@ export abstract class BaseTestInstance {
         return queryParameters;
     }
 
+    /**
+     * Makes assertions about a generic error
+     * @param message The error message
+     * @param id The expected id
+     * @param title The expected title
+     * @param status The expected status code
+     * @param detail The expected detailed message
+     * @param instance The URL of the failed request
+     */
     private verifyError = (message: IError, id: string, title: string, status: number, detail: string, instance: string) => {
         expect(message).toBeTruthy();
         expect(message.id).toEqual(id);
@@ -92,6 +141,10 @@ export abstract class BaseTestInstance {
 export const page = 1
 export const perPage = 10
 
+/**
+ * Defines a series of standardised tests for a paginated model
+ * @param testInstance The test instance
+ */
 export const testPagination = (testInstance: BaseTestInstance) => {
     test('Should return a 400 bad parameter error when both page and perPage query parameters are missing',
         async () => {

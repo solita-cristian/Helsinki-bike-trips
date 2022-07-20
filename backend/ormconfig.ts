@@ -1,5 +1,8 @@
 import {PostgresConnectionOptions} from "typeorm/driver/postgres/PostgresConnectionOptions";
 
+/**
+ * Defines the data source configuration
+ */
 export const databaseConfiguration: PostgresConnectionOptions = {
     type: "postgres",
     host: process.env.DB_HOST,

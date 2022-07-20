@@ -11,6 +11,9 @@ export class TripsController extends BaseController<trips> {
         super(AppDataSource.getRepository('trips'));
     }
 
+    /**
+     * Returns the total amount of trips
+     */
     getTripCount = async () => {
         return await this.repository
             .createQueryBuilder('getTripCount')
@@ -18,6 +21,9 @@ export class TripsController extends BaseController<trips> {
             .getCount();
     }
 
+    /**
+     * Returns a list containing all station ids
+     */
     getStationIds = async () => {
         return (await AppDataSource.getRepository('stations')
             .createQueryBuilder('getStationIds')

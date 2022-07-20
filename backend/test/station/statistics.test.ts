@@ -5,12 +5,18 @@ import {AppDataSource} from "../../src/database";
 import {StationStatistics} from "../../src/models/stationStatistics";
 import {StatisticsParameters} from "../../src/models/parameters/station";
 
-
+/**
+ * Defines a test instance specifically for testing stations statistics
+ */
 class StatisticsTestInstance extends BaseTestInstance {
     constructor() {
         super('station', '/stations');
     }
 
+    /**
+     * Makes assertions on the StationStatistics object
+     * @param statistics The statistics object
+     */
     verifyStatistics = (statistics: StationStatistics) => {
         expect(statistics).toBeTruthy();
         expect(statistics.topInbound).toHaveLength(5);

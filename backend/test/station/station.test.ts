@@ -5,6 +5,9 @@ import {BaseTestInstance} from "../base";
 import {AppDataSource} from "../../src/database";
 
 
+/**
+ * Defines a test instance specifically for testing a single station
+ */
 class StationTestInstance extends BaseTestInstance {
     constructor() {
         super('station', '/stations');

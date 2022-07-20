@@ -6,11 +6,18 @@ import {AddressLanguage, NameLanguage, StationParameters} from "../../src/models
 import {AppDataSource} from "../../src/database";
 import {stations} from "../../src/models/stations";
 
+/**
+ * Defines a test instance specifically for testing stations
+ */
 class StationsTestInstance extends BaseTestInstance {
     constructor() {
         super('stations', '/stations');
     }
 
+    /**
+     * Builds a specific query string, based on the parameters the /stations route accepts
+     * @param parameters The parameters object
+     */
     buildQueryParameters = (parameters?: StationParameters) => {
         let queryParameters = '';
         if (parameters)
