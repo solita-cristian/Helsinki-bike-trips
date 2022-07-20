@@ -1,10 +1,7 @@
-import dotenv from 'dotenv';
 import {AppDataSource} from "./src/database";
 import {makeApp} from "./src/app";
 
-dotenv.config()
-
-const port = process.env.PORT;
+const port = process.env.BACKEND_PORT;
 
 makeApp()
     .then(app => app.listen(port, () => {
