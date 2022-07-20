@@ -1,37 +1,44 @@
-import {makeApp} from "../../src/app";
 import {stations} from "../../src/models/stations";
-import request from 'supertest'
 import '../base'
 import {IError} from '../../src/models/errors'
-import {verifyError} from "../base";
+import {BaseTestInstance} from "../base";
+import {AppDataSource} from "../../src/database";
+
+
+class StationTestInstance extends BaseTestInstance {
+    constructor() {
+        super('station', '/stations');
+    }
+}
+
+const testInstance = new StationTestInstance();
+
+beforeAll(async () => {
+    await AppDataSource.initialize();
+})
+
+afterAll(async () => {
+    await AppDataSource.destroy();
+})
 
 describe("Station", () => {
     const validId = 501
     const invalidId = 9999
-    const validUrl = `/stations/${validId}`
-    const invalidUrl = `/stations/${invalidId}`
 
     test("Should be returned when given valid ID", async () => {
-        const returnedStation = await request(await makeApp()).get(validUrl);
-        expect(returnedStation.statusCode).toBe(200);
+        const {response} = await testInstance.makeRequestWithParameters(validId)
 
         // Check if the returned station is not null and has the correct ID
-        const station = returnedStation.body as stations;
+        const station = response.body as stations;
         expect(station).toBeTruthy();
         expect(station.id).toEqual(validId)
     })
 
     test("Should return a '404 not found' error message when is not found", async () => {
-        const errorMessage = await request(await makeApp()).get(invalidUrl);
-        expect(errorMessage.statusCode).toBe(404);
+        const {fullUrl, response} = await testInstance.makeRequestWithParameters(invalidId);
+        expect(response.statusCode).toBe(404);
 
-        verifyError(errorMessage.body as IError,
-            'Not found',
-            'Station not found',
-            errorMessage.statusCode,
-            `The station with ID = ${invalidId} was not found`,
-            invalidUrl
-        )
+        testInstance.verifyNotFound(response.body as IError, response.statusCode, fullUrl, 'ID', invalidId)
     })
 
 })
