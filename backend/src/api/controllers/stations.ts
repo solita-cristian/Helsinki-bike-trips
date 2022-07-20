@@ -47,21 +47,21 @@ export class StationsController extends BaseController<stations> {
             }
 
             if (parameters.city) {
-                if (!Object.values(AddressLanguage).includes(parameters.city[1]))
+                if (!Object.values(AddressLanguage).includes(parameters.city[1] as AddressLanguage))
                     return this.badParameterError(req, res, 'city', parameters.city, 'language in [fi, se]');
                 builder.andWhere(`city_${parameters.city[1]} = :city`,
                     {city: parameters.city[0]});
             }
 
             if (parameters.address) {
-                if (!Object.values(AddressLanguage).includes(parameters.address[1]))
+                if (!Object.values(AddressLanguage).includes(parameters.address[1] as AddressLanguage))
                     return this.badParameterError(req, res, 'address', parameters.address, 'language in [fi, se]');
                 builder.andWhere(`address_${parameters.address[1]} like :address`,
                     {address: `%${parameters.address[0]}%`});
             }
 
             if (parameters.name) {
-                if (!Object.values(NameLanguage).includes(parameters.name[1]))
+                if (!Object.values(NameLanguage).includes(parameters.name[1] as NameLanguage))
                     return this.badParameterError(req, res, 'name', parameters.name, 'language in [fi, se, en]');
                 builder.andWhere(`name_${parameters.name[1]} = :name`,
                     {name: parameters.name[0]});
@@ -95,8 +95,9 @@ export class StationsController extends BaseController<stations> {
 
             const station = await this.getStationById(stationId)
 
-            return station ?
-                this.sendResult(res, station) :
+            if (station)
+                this.sendResult(res, station)
+            else
                 this.notFoundError(req, res, 'station', 'ID', stationId);
         }
     }

@@ -18,7 +18,7 @@ export class BaseController<Entity> {
      * @param error An error object, describing the kind of error, as well as the request url that generated it
      */
     sendError = (res: Response, error: Error) => {
-        return res.status(error.status).json(error)
+        res.status(error.status).json(error)
     }
 
     /**
@@ -46,7 +46,7 @@ export class BaseController<Entity> {
             `The parameter ${parameterName} has value ${foundValue}. Expected ${expectedValue}`,
             req.url
         )
-        return this.sendError(res, badParameterError)
+        this.sendError(res, badParameterError)
     }
 
     /**
@@ -59,7 +59,7 @@ export class BaseController<Entity> {
      */
     notFoundError = (req: Request, res: Response, what: string, propertyName: string, propertyValue: any) => {
         const notFoundError = new NotFoundError(
-            `${what[0].toUpperCase() + what.substring(1)} not found`,
+            `${what} not found`,
             `The ${what} with ${propertyName} = ${propertyValue} was not found`,
             req.url
         )
