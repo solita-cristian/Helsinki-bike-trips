@@ -7,7 +7,7 @@ interface IPage<T> {
     page: number
 }
 
-abstract class Page<T> implements IPage<T> {
+export abstract class Page<T> implements IPage<T> {
     public data: T[];
     public page: number;
     public perPage: number;
