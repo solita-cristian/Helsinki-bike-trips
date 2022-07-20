@@ -26,4 +26,3 @@ rm -rf *.csv
 
 # Start and listen postgresql service with configuration
 service postgresql stop
-echo "$DB_PASSWORD" | sudo -S -u postgres /usr/lib/postgresql/12/bin/postgres -D /var/lib/postgresql/12/main -c config_file=/etc/postgresql/12/main/postgresql.conf

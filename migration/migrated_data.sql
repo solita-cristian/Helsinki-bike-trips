@@ -1,5 +1,4 @@
 CREATE TABLE stations(
-    fid SERIAL PRIMARY KEY,
     id INTEGER UNIQUE NOT NULL,
     name_fi VARCHAR(50) NOT NULL,
     name_se VARCHAR(50) NOT NULL,

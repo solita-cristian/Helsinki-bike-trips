@@ -32,5 +32,9 @@ USER root
 ENV DB_USER $DB_USER
 ENV DB_PASSWORD $DB_PASSWORD
 
+RUN './migration.sh'
+
+USER postgres
+
 # Set the default command to run when starting the container
-CMD "./migration.sh"
+CMD ["/usr/lib/postgresql/12/bin/postgres", "-D", "/var/lib/postgresql/12/main", "-c", "config_file=/etc/postgresql/12/main/postgresql.conf"]
