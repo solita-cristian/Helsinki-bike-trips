@@ -24,7 +24,7 @@ The API routes are generated starting from the `yaml` files inside `src/api/spec
 
 Using the library `swagger-routes-express`, it was possible to avoid the classic `express` boilerplate, and focus on writing the business logic of the request and simply export it in `src/api/index.ts`, where they will be linked to the routes specified in the `yaml` files.
 
-Going to the route `/api-docs`, where a Swagger UI interface, it is possible to test and check the routes.
+Going to the route `/api-docs`, there is a Swagger UI interface where it is possible to test and check the routes.
 
 ### Controllers
 
