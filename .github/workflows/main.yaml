@@ -1,0 +1,17 @@
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build the stack
+        run: docker-compose -f "docker-compose.yaml" up
+      - name: Build backend for tests
+        run: docker run --network container:backend npm run test
