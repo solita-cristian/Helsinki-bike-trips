@@ -158,6 +158,25 @@ describe("Trips", () => {
 
     })
 
+    test('Should return a 400 bad parameter error when distance query parameter is out of bounds',
+        async () => {
+            const parameters: TripParameters = {
+                distance: -1,
+                page: page,
+                perPage: per_page
+            }
+            const {fullUrl, response} = await makeRequestWithParameters(url, parameters)
+            expect(response.statusCode).toEqual(400);
+
+            verifyError(response.body as IError,
+                'Badly formatted parameter',
+                'A required missing parameter is badly formatted',
+                response.statusCode,
+                `The parameter distance has value ${parameters.distance! * 1000}. Expected >= 0`,
+                fullUrl
+            );
+        })
+
     test('Should return a list of station satisfying duration parameter', async () => {
         const parameters: TripParameters = {
             duration: 18.9,
@@ -174,6 +193,25 @@ describe("Trips", () => {
 
     })
 
+    test('Should return a 400 bad parameter error when distance query parameter is out of bounds',
+        async () => {
+            const parameters: TripParameters = {
+                duration: -1,
+                page: page,
+                perPage: per_page
+            }
+            const {fullUrl, response} = await makeRequestWithParameters(url, parameters)
+            expect(response.statusCode).toEqual(400);
+
+            verifyError(response.body as IError,
+                'Badly formatted parameter',
+                'A required missing parameter is badly formatted',
+                response.statusCode,
+                `The parameter duration has value ${parameters.duration! * 60}. Expected >= 0`,
+                fullUrl
+            );
+        })
+
     test('Should return a list of station satisfying departure parameter', async () => {
         const parameters: TripParameters = {
             departure: 501,
@@ -189,6 +227,25 @@ describe("Trips", () => {
 
     })
 
+    test('Should return a 400 bad parameter error when departure query parameter is not a valid station id',
+        async () => {
+            const parameters: TripParameters = {
+                departure: 99999,
+                page: page,
+                perPage: per_page
+            }
+            const {fullUrl, response} = await makeRequestWithParameters(url, parameters)
+            expect(response.statusCode).toEqual(400);
+
+            verifyError(response.body as IError,
+                'Badly formatted parameter',
+                'A required missing parameter is badly formatted',
+                response.statusCode,
+                `The parameter departure has value ${parameters.departure}. Expected that the referenced station exists`,
+                fullUrl
+            );
+        })
+
     test('Should return a list of station satisfying return parameter', async () => {
         const parameters: TripParameters = {
             return: 501,
@@ -203,5 +260,24 @@ describe("Trips", () => {
         stations.data.forEach(s => expect(s.return_station.id).toEqual(501))
 
     })
+
+    test('Should return a 400 bad parameter error when return query parameter is not a valid station id',
+        async () => {
+            const parameters: TripParameters = {
+                return: 99999,
+                page: page,
+                perPage: per_page
+            }
+            const {fullUrl, response} = await makeRequestWithParameters(url, parameters)
+            expect(response.statusCode).toEqual(400);
+
+            verifyError(response.body as IError,
+                'Badly formatted parameter',
+                'A required missing parameter is badly formatted',
+                response.statusCode,
+                `The parameter return has value ${parameters.return}. Expected that the referenced station exists`,
+                fullUrl
+            );
+        })
 
 })
