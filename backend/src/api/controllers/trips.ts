@@ -43,13 +43,8 @@ export class TripsController extends BaseController<trips> {
                 parseFloat(req.query.distance as any),
                 parseFloat(req.query.duration as any));
 
-            console.log(parameters)
-
-
             const tripsCount = await this.getTripCount();
             const stationIds: number[] = await this.getStationIds();
-
-            console.log(tripsCount)
 
             const builder = this.repository.createQueryBuilder('getAllStations').cache(true);
 
