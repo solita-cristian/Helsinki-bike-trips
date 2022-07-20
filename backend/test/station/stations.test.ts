@@ -162,6 +162,27 @@ describe("Stations", () => {
 
     })
 
+    test('Should return a 400 bad parameter error when city query parameter has invalid language',
+        async () => {
+            // @ts-ignore
+            const parameters: StationParameters = {
+                city: ['Espoo', 'en' as AddressLanguage],
+                page: page,
+                perPage: per_page
+            };
+            const {fullUrl, response} = await makeRequestWithParameters(url, parameters)
+            expect(response.statusCode).toEqual(400);
+
+            verifyError(response.body as IError,
+                'Badly formatted parameter',
+                'A required missing parameter is badly formatted',
+                response.statusCode,
+                `The parameter city has value ${parameters.city}. ` +
+                `Expected language in [fi, se]`,
+                fullUrl
+            );
+        })
+
     test('Should return a list of station satisfying address parameter', async () => {
         const parameters: StationParameters = {
             address: ['Gallen-Kallelas', AddressLanguage.SE],
@@ -178,6 +199,27 @@ describe("Stations", () => {
 
     })
 
+    test('Should return a 400 bad parameter error when address query parameter has invalid language',
+        async () => {
+            // @ts-ignore
+            const parameters: StationParameters = {
+                address: ['Gallen-Kallelas', 'en' as AddressLanguage],
+                page: page,
+                perPage: per_page
+            };
+            const {fullUrl, response} = await makeRequestWithParameters(url, parameters)
+            expect(response.statusCode).toEqual(400);
+
+            verifyError(response.body as IError,
+                'Badly formatted parameter',
+                'A required missing parameter is badly formatted',
+                response.statusCode,
+                `The parameter address has value ${parameters.address}. ` +
+                `Expected language in [fi, se]`,
+                fullUrl
+            );
+        })
+
     test('Should return a list of station satisfying capacity parameter', async () => {
         const parameters: StationParameters = {
             capacity: 10,
@@ -192,6 +234,27 @@ describe("Stations", () => {
         stations.data.forEach(s => expect(s.capacity).toEqual(10))
 
     })
+
+    test('Should return a 400 bad parameter error when capacity query parameter is out of bounds',
+        async () => {
+            // @ts-ignore
+            const parameters: StationParameters = {
+                capacity: -1,
+                page: page,
+                perPage: per_page
+            };
+            const {fullUrl, response} = await makeRequestWithParameters(url, parameters)
+            expect(response.statusCode).toEqual(400);
+
+            verifyError(response.body as IError,
+                'Badly formatted parameter',
+                'A required missing parameter is badly formatted',
+                response.statusCode,
+                `The parameter capacity has value ${parameters.capacity}. ` +
+                `Expected >= 0`,
+                fullUrl
+            );
+        })
 
     test('Should return a list of station satisfying operator parameter', async () => {
         const parameters: StationParameters = {
@@ -223,6 +286,29 @@ describe("Stations", () => {
         stations.data.forEach(s => expect(s.name_fi).toContain('Sepetlahdentie'));
 
     })
+
+    test('Should return a 400 bad parameter error when name query parameter has invalid language',
+        async () => {
+            // @ts-ignore
+            const parameters: StationParameters = {
+                name: ['Sepetlahdentie', 'ro' as NameLanguage],
+                page: page,
+                perPage: per_page
+            };
+            const {fullUrl, response} = await makeRequestWithParameters(url, parameters)
+            expect(response.statusCode).toEqual(400);
+
+            console.log(fullUrl)
+
+            verifyError(response.body as IError,
+                'Badly formatted parameter',
+                'A required missing parameter is badly formatted',
+                response.statusCode,
+                `The parameter name has value ${parameters.name}. ` +
+                `Expected language in [fi, se, en]`,
+                fullUrl
+            );
+        })
 
     test('Should return a list of station satisfying multiple parameters', async () => {
         const parameters: StationParameters = {

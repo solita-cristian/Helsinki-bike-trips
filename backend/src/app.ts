@@ -5,7 +5,6 @@ import {serve, setup} from 'swagger-ui-express'
 import cors from 'cors';
 
 const SwaggerParser = require('swagger-parser')
-
 const apiControllers = require('./api')
 
 dotenv.config()
@@ -24,7 +23,6 @@ export const makeApp = async () => {
     app.use(express.urlencoded({extended: true}));
     app.use(cors())
 
-    // Swagger API docs route
     app.use('/api-docs', serve, setup(apiDefinitions))
 
     connect(app)
