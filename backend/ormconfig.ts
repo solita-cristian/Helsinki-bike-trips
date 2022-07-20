@@ -1,5 +1,3 @@
-import {stations} from "./src/models/stations";
-import {trips} from "./src/models/trips";
 import {PostgresConnectionOptions} from "typeorm/driver/postgres/PostgresConnectionOptions";
 import dotenv from "dotenv";
 
@@ -14,7 +12,7 @@ export const databaseConfiguration: PostgresConnectionOptions = {
     database: process.env.DB_DATABASE_NAME,
     synchronize: true,
     logging: true,
-    entities: [stations, trips],
+    entities: [__dirname + "/src/models/**/*.{js,ts}"],
     subscribers: [],
     migrations: [],
 }
