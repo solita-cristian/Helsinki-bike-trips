@@ -4,10 +4,7 @@ This service is responsible for fetching the CSV files from the web, validate th
 
 ## Getting started
 
-This service doesn't make use of external libraries, so it's installation and executions are straightforward: 
-You are only required to execute `script.sh` and all the necessary tools will be installed automatically.
-
-**Note**: the script it was tested only on Debian and derivative distributions.
+The service is meant to run on `docker`. See top-level README.md for more details.
 
 ## Functionality
 
