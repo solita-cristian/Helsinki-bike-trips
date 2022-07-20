@@ -1,0 +1,42 @@
+type: "object"
+properties:
+  id:
+    type: "integer"
+    format: "int64"
+    description: "The unique id of the station"
+  name_fi:
+    type: "string"
+    description: "The name of the station in Finnish"
+  name_se:
+    type: "string"
+    description: "The name of the station in Swedish"
+  name_en:
+    type: "string"
+    description: "The name of the station in English"
+  address_fi:
+    type: "string"
+    description: "The address of the station in Finnish"
+  address_se:
+    type: "string"
+    description: "The address of the station in Swedish"
+  city_fi:
+    type: "string"
+    description: "The city in which the station is located in Finnish"
+  city_se:
+    type: "string"
+    description: "The city in which the station is located in Swedish"
+  operator:
+    type: "string"
+    description: "The name of the operator that owns and maintains the station"
+  capacity:
+    type: "integer"
+    format: "int64"
+    description: "The total bike capacity of the station"
+  x:
+    type: "number"
+    format: "float32"
+    description: "The latitudinal coordinate"
+  y:
+    type: "number"
+    format: "float32"
+    description: "The longitudinal coordinate"

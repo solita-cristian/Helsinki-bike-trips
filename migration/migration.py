@@ -15,7 +15,6 @@ trips_header = [
 ]
 
 stations_header = [
-    "fid",
     "id",
     "name_fi",
     "name_se",
@@ -41,7 +40,6 @@ with open(stations_file, mode="r") as s:
     for r in rows:
         stations_ids.add(r["ID"])
         stations.append({
-            "fid": r["\ufeffFID"],
             "id": r["ID"],
             "name_fi": r["Nimi"],
             "name_se": r["Namn"],

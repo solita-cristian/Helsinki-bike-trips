@@ -1,0 +1,26 @@
+type: "object"
+properties:
+  departure_time:
+    type: "string"
+    format: "date-time"
+    description: "The date and time at which the trip started"
+  return_time:
+    type: "string"
+    format: "date-time"
+    description: "The date and time at which the trip ended"
+  departure_station:
+    type: "integer"
+    format: "int64"
+    description: "The ID of the starting station"
+  return_station:
+    type: "integer"
+    format: "int64"
+    description: "The ID of the ending station"
+  distance:
+    type: "number"
+    format: "float32"
+    description: "The total distance done during the trip"
+  duration:
+    type: "integer"
+    format: "int64"
+    description: "The total amount of seconds done during the trip"

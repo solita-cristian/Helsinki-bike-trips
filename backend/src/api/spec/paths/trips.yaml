@@ -1,0 +1,52 @@
+get:
+  tags:
+    - "root"
+  summary: "Fetches a chunk of trips at the time, based on the current cursor position"
+  operationId: "getTrips"
+  description: "Returns a list of trips"
+  produces:
+    - "application/json"
+  parameters:
+    - name: "page"
+      in: "query"
+      required: true
+      type: "integer"
+      description: "Fetches only the items contained in the specified page"
+    - name: "perPage"
+      in: "query"
+      required: true
+      type: "integer"
+      description: "How many items per page will get fetched"
+    - name: "departure"
+      in: "query"
+      required: false
+      type: "integer"
+      description: "The starting station"
+    - name: "return"
+      in: "query"
+      required: false
+      type: "integer"
+      description: "The ending station"
+    - name: "distance"
+      in: "query"
+      required: false
+      type: "number"
+      format: "float"
+      description: "The covered distance in km."
+    - name: "duration"
+      in: "query"
+      required: false
+      type: "number"
+      format: "float"
+      description: "The duration of the trip in seconds"
+  responses:
+    200:
+      description: "successful operation"
+      schema:
+        type: "array"
+        items:
+          $ref: "./../schemas/trip.yaml"
+    400:
+      description: "badly formatted or missing query parameters"
+      schema:
+        $ref: "./../schemas/error.yaml"

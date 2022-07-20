@@ -1,0 +1,17 @@
+type: "object"
+properties:
+  id:
+    type: "string"
+    description: "The type of error"
+  title:
+    type: "string"
+    description: "A brief summary of the error"
+  status:
+    type: "integer"
+    description: "The status code returned by the response"
+  detail:
+    type: "string"
+    description: "A more specific description of the error"
+  instance:
+    type: "string"
+    description: "The particular request instance that generated the error"
