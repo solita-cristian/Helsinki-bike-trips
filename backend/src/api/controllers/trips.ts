@@ -36,12 +36,14 @@ export class TripsController extends BaseController<trips> {
     getTrips = () => {
         return async (req: Request, res: Response) => {
             const parameters = new TripParameters(
-                parseInt(req.query.page as any),
-                parseInt(req.query.perPage as any),
+                req.query.page as any,
+                req.query.perPage as any,
                 parseInt(req.query.departure as any),
                 parseInt(req.query.return as any),
                 parseFloat(req.query.distance as any),
-                parseFloat(req.query.duration as any));
+                parseFloat(req.query.duration as any),
+            );
+
 
             const tripsCount = await this.getTripCount();
             const stationIds: number[] = await this.getStationIds();
