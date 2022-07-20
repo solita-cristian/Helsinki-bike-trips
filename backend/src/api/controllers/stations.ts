@@ -62,7 +62,7 @@ export class StationsController extends BaseController<stations> {
 
             if (parameters.name) {
                 if (!Object.values(NameLanguage).includes(parameters.name[1]))
-                    return this.badParameterError(req, res, 'name', parameters.address, 'language in [fi, se, en]');
+                    return this.badParameterError(req, res, 'name', parameters.name, 'language in [fi, se, en]');
                 builder.andWhere(`name_${parameters.name[1]} = :name`,
                     {name: parameters.name[0]});
             }
