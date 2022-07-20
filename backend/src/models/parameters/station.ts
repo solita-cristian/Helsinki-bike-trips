@@ -20,22 +20,14 @@ export enum AddressLanguage {
 /**
  * Defines the possible query parameters that the route /stations can have
  */
-export class StationParameters extends BaseParameters {
-    public city?: [string, AddressLanguage];
-    public name?: [string, NameLanguage];
-    public address?: [string, AddressLanguage];
-    public operator?: string;
-    public capacity?: number;
+export interface StationParameters extends BaseParameters {
+    city?: [string, string];
+    name?: [string, string];
+    address?: [string, string];
+    operator?: string;
+    capacity?: number;
+}
 
-    constructor(page?: number, perPage?: number, city?: [string, AddressLanguage], name?: [string, NameLanguage],
-                address?: [string, AddressLanguage], operator?: string, capacity?: number) {
-        super(page, perPage);
-        this.capacity = capacity;
-        this.city = city;
-        this.address = address;
-        this.name = name;
-        this.operator = operator;
-    }
-
-
+export interface StatisticsParameters extends BaseParameters {
+    month?: number
 }
