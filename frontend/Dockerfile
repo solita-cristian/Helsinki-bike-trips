@@ -6,6 +6,6 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-FROM nginx:alpine
+FROM nginx:alpine as frontend
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /build/build /frontend/build
