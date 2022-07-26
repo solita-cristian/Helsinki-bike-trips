@@ -1,24 +1,46 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { Header } from './components/templates/Header';
+import { Footer } from './components/templates/Footer';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from "react-router-dom";
+import { Home } from './components/pages/Home';
+import { Box, Toolbar, Typography } from '@mui/material';
 
 function App() {
+
+  const drawerWidth = 240;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='app'>
+      <Router>
+
+      <Header drawerWidth={drawerWidth}/>
+
+      <Box 
+        component="main"
+        sx={{ position: "fixed", left: drawerWidth, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+      >
+        <Toolbar />
+        <Typography paragraph sx={{mr: "20%", ml: "20%", mt: 10}}>
+          <Routes>
+            <Route path="/" element={<Home />}></Route>
+            <Route path="/stations"></Route>
+            <Route path="/trips"></Route>
+            <Route path="/stations/:stationId"></Route>
+          </Routes>
+        </Typography>
+      
+      </Box>
+
+      <Footer />
+
+      </Router>
+      
+
     </div>
   );
 }
