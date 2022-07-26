@@ -1,10 +1,22 @@
-FROM node:alpine
-WORKDIR /app
-COPY package.json .
+FROM node:alpine as node
+
+
+FROM node as builder
+WORKDIR /build
+COPY package*.json .
 RUN npm install
 COPY . .
 
+RUN npm run build
+
+FROM node as backend
+WORKDIR /app
+COPY package*.json .
+RUN npm install --omit=dev
+
+COPY ./src/api/spec ./src/api/spec
+COPY --from=builder /build/dist .
+
 EXPOSE 8080
 
-RUN npm run build
-CMD ["npm", "start"]
+ENTRYPOINT ["node", "index.js"]
