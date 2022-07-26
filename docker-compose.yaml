@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   db:
+    restart: always
     container_name: database
     build:
       dockerfile: 'Dockerfile'
@@ -15,6 +16,7 @@ services:
       - pgdata:/var/lib/postgresql/data
 
   backend:
+    restart: always
     container_name: backend
     build:
       dockerfile: 'Dockerfile'
@@ -34,6 +36,14 @@ services:
     links:
       - db
 
+  frontend:
+    restart: always
+    container_name: frontend
+    build:
+      dockerfile: 'Dockerfile'
+      context: './frontend'
+    ports:
+      - '3000:80'
 
 volumes:
   pgdata: { }
