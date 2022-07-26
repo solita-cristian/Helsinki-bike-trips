@@ -1,6 +1,8 @@
 {
   "name": "frontend",
-  "version": "0.1.0",
+  "author": "Cristian Nicolae Lupascu",
+  "version": "1.0.0",
+  "description": "This service is responsible for exposing the frontend of the application to the user",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",

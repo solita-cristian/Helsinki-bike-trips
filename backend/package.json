@@ -1,6 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
+  "private": true,
   "description": "This service is responsible for exposing an API that will fetch the required data from the database and send it to the \r frontend service.",
   "main": "index.js",
   "scripts": {
@@ -10,7 +11,7 @@
     "test": "jest --config ./jest.config.ts --collectCoverage --coverageDirectory=\\\"./coverage\\\" --ci --reporters=default --reporters=jest-junit --watchAll=false"
   },
   "keywords": [],
-  "author": "",
+  "author": "Cristian Nicolae Lupascu",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
