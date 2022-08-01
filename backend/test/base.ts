@@ -1,10 +1,15 @@
-import {IError} from "../src/models/errors";
-import request from "supertest";
-import {makeApp} from "../src/app";
-import {BaseParameters} from "../src/models/parameters/base";
-import {Page, StationsPage} from "../src/models/page";
-import {StationParameters} from "../src/models/parameters/station";
-import {AppDataSource} from "../src/database";
+import {IError} from '../src/models/errors'
+import request from 'supertest'
+import {makeApp} from '../src/app'
+import {BaseParameters} from '../src/models/parameters/base'
+import {Page, StationsPage} from '../src/models/page'
+import {StationParameters} from '../src/models/parameters/station'
+import {AppDataSource} from '../src/database'
+
+/**
+ * Defines the valid types that can be sent to the frontend  
+ */
+type sendable = string | undefined | object
 
 /**
  * Defines a base test instance, which abstracts the request call, the url buildup and some repetitive checks
@@ -20,7 +25,7 @@ export abstract class BaseTestInstance {
         return await AppDataSource.getRepository(this.instanceName)
             .createQueryBuilder('getCount')
             .cache(true)
-            .getCount();
+            .getCount()
     }
 
     /**
@@ -30,24 +35,25 @@ export abstract class BaseTestInstance {
      * @param body The body of the request
      * @param method The method of the request
      */
-    makeRequestWithParameters = async (requestParameter?: string | number, parameters?: BaseParameters, body?: any, method = 'get') => {
-        const params = this.buildQueryParameters(parameters);
+    makeRequestWithParameters = async (requestParameter?: string | number,
+        parameters?: BaseParameters, body?: sendable, method = 'get') => {
+        const params = this.buildQueryParameters(parameters)
         const url = `${this.baseUrl + (requestParameter ? `/${requestParameter}` : '')}?${params}`
-        let response;
+        let response
 
         switch (method) {
-            case 'post':
-                response = await request(await makeApp()).post(url).send(body)
-                break;
-            default:
-                response = await request(await makeApp()).get(url)
-                break;
+        case 'post':
+            response = await request(await makeApp()).post(url).send(body)
+            break
+        default:
+            response = await request(await makeApp()).get(url)
+            break
         }
 
         return {
             fullUrl: url,
             response: response
-        };
+        }
     }
 
     /**
@@ -59,8 +65,8 @@ export abstract class BaseTestInstance {
      * @param instance The URL of the request
      * @param actualStatusCode The status code of the response
      */
-    verifyBadParameter = (error: IError, badParameterName: string, badParameterValue: any, expectedBadParameterValue: string,
-                          instance: string, actualStatusCode: number) => {
+    verifyBadParameter = (error: IError, badParameterName: string, badParameterValue: unknown, expectedBadParameterValue: string,
+        instance: string, actualStatusCode: number) => {
         this.verifyError(error,
             'Badly formatted parameter',
             'A required missing parameter is badly formatted',
@@ -78,7 +84,7 @@ export abstract class BaseTestInstance {
      * @param parameterName The name of the parameter which lead to the failure of the request
      * @param parameterValue The value of the parameter
      */
-    verifyNotFound = (error: IError, actualStatusCode: number, instance: string, parameterName: string, parameterValue: any) => {
+    verifyNotFound = (error: IError, actualStatusCode: number, instance: string, parameterName: string, parameterValue: sendable) => {
         this.verifyError(error,
             'Not found',
             `${this.instanceName} not found`,
@@ -95,13 +101,13 @@ export abstract class BaseTestInstance {
      * @param perPage The expected number of items per page
      */
     verifyPage<T>(stationsPage: Page<T>, page: number, perPage: number) {
-        expect(stationsPage).toBeTruthy();
+        expect(stationsPage).toBeTruthy()
         expect(typeof stationsPage.page).toBe('number')
-        expect(stationsPage.page).toEqual(page);
+        expect(stationsPage.page).toEqual(page)
         expect(typeof stationsPage.perPage).toBe('number')
-        expect(stationsPage.perPage).toEqual(perPage);
-        expect(stationsPage.data).toBeTruthy();
-        expect(stationsPage.data).toHaveLength(perPage);
+        expect(stationsPage.perPage).toEqual(perPage)
+        expect(stationsPage.data).toBeTruthy()
+        expect(stationsPage.data).toHaveLength(perPage)
     }
 
     /**
@@ -109,13 +115,13 @@ export abstract class BaseTestInstance {
      * @param parameters The parameters object
      */
     protected buildQueryParameters = (parameters?: BaseParameters) => {
-        let queryParameters = '';
+        let queryParameters = ''
         if (parameters)
             for (const [key, value] of Object.entries(parameters)) {
                 if (value != undefined)
-                    queryParameters += `${key}=${value}&`;
+                    queryParameters += `${key}=${value}&`
             }
-        return queryParameters;
+        return queryParameters
     }
 
     /**
@@ -128,12 +134,12 @@ export abstract class BaseTestInstance {
      * @param instance The URL of the failed request
      */
     private verifyError = (message: IError, id: string, title: string, status: number, detail: string, instance: string) => {
-        expect(message).toBeTruthy();
-        expect(message.id).toEqual(id);
-        expect(message.title).toEqual(title);
-        expect(message.status).toEqual(status);
-        expect(message.detail).toEqual(detail);
-        expect(message.instance).toEqual(instance);
+        expect(message).toBeTruthy()
+        expect(message.id).toEqual(id)
+        expect(message.title).toEqual(title)
+        expect(message.status).toEqual(status)
+        expect(message.detail).toEqual(detail)
+        expect(message.instance).toEqual(instance)
     }
 
 }
@@ -149,8 +155,8 @@ export const testPagination = (testInstance: BaseTestInstance) => {
     test('Should return a 400 bad parameter error when both page and perPage query parameters are missing',
         async () => {
             const parameters: StationParameters = {}
-            const {fullUrl, response} = await testInstance.makeRequestWithParameters(undefined, parameters);
-            expect(response.statusCode).toBe(400);
+            const {fullUrl, response} = await testInstance.makeRequestWithParameters(undefined, parameters)
+            expect(response.statusCode).toBe(400)
 
             testInstance.verifyBadParameter(response.body as IError, 'page', parameters.page, '>= 1',
                 fullUrl, response.statusCode)
@@ -161,8 +167,8 @@ export const testPagination = (testInstance: BaseTestInstance) => {
             const parameters: StationParameters = {
                 page: 0
             }
-            const {fullUrl, response} = await testInstance.makeRequestWithParameters(undefined, parameters);
-            expect(response.statusCode).toBe(400);
+            const {fullUrl, response} = await testInstance.makeRequestWithParameters(undefined, parameters)
+            expect(response.statusCode).toBe(400)
 
             testInstance.verifyBadParameter(response.body as IError, 'page', parameters.page, '>= 1',
                 fullUrl, response.statusCode)
@@ -172,9 +178,9 @@ export const testPagination = (testInstance: BaseTestInstance) => {
         async () => {
             const parameters: StationParameters = {
                 perPage: perPage
-            };
-            const {fullUrl, response} = await testInstance.makeRequestWithParameters(undefined, parameters);
-            expect(response.statusCode).toBe(400);
+            }
+            const {fullUrl, response} = await testInstance.makeRequestWithParameters(undefined, parameters)
+            expect(response.statusCode).toBe(400)
 
             testInstance.verifyBadParameter(response.body as IError, 'page', parameters.page, '>= 1',
                 fullUrl, response.statusCode)
@@ -185,9 +191,9 @@ export const testPagination = (testInstance: BaseTestInstance) => {
             const parameters: StationParameters = {
                 page: page,
                 perPage: 0
-            };
-            const {fullUrl, response} = await testInstance.makeRequestWithParameters(undefined, parameters);
-            expect(response.statusCode).toBe(400);
+            }
+            const {fullUrl, response} = await testInstance.makeRequestWithParameters(undefined, parameters)
+            expect(response.statusCode).toBe(400)
 
             testInstance.verifyBadParameter(response.body as IError, 'perPage', parameters.perPage,
                 `1 <= perPage <= ${await testInstance.maxPerPage()}`, fullUrl, response.statusCode)
@@ -197,9 +203,9 @@ export const testPagination = (testInstance: BaseTestInstance) => {
         async () => {
             const parameters: StationParameters = {
                 page: page
-            };
-            const {fullUrl, response} = await testInstance.makeRequestWithParameters(undefined, parameters);
-            expect(response.statusCode).toBe(400);
+            }
+            const {fullUrl, response} = await testInstance.makeRequestWithParameters(undefined, parameters)
+            expect(response.statusCode).toBe(400)
 
             testInstance.verifyBadParameter(response.body as IError, 'perPage', parameters.perPage,
                 `1 <= perPage <= ${await testInstance.maxPerPage()}`, fullUrl, response.statusCode)
@@ -210,12 +216,12 @@ export const testPagination = (testInstance: BaseTestInstance) => {
             const parameters = {
                 page: page,
                 perPage: perPage
-            };
-            const {response} = await testInstance.makeRequestWithParameters(undefined, parameters);
-            expect(response.statusCode).toBe(200);
+            }
+            const {response} = await testInstance.makeRequestWithParameters(undefined, parameters)
+            expect(response.statusCode).toBe(200)
 
-            const stations = response.body as StationsPage;
-            testInstance.verifyPage(stations, parameters.page, parameters.perPage);
+            const stations = response.body as StationsPage
+            testInstance.verifyPage(stations, parameters.page, parameters.perPage)
 
         })
 }
