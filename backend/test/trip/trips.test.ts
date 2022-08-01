@@ -57,7 +57,7 @@ describe('Trips', () => {
             const {fullUrl, response} = await testInstance.makeRequestWithParameters(undefined, parameters)
             expect(response.statusCode).toBe(400)
 
-            testInstance.verifyBadParameter(response.body as IError, 'distance', parameters.distance! * 1000,
+            testInstance.verifyBadParameter(response.body as IError, 'distance', (parameters.distance as number) * 1000,
                 '>= 0', fullUrl, response.statusCode)
         })
 
@@ -86,7 +86,7 @@ describe('Trips', () => {
             const {fullUrl, response} = await testInstance.makeRequestWithParameters(undefined, parameters)
             expect(response.statusCode).toBe(400)
 
-            testInstance.verifyBadParameter(response.body as IError, 'duration', parameters.duration! * 60,
+            testInstance.verifyBadParameter(response.body as IError, 'duration', (parameters.duration as number) * 60,
                 '>= 0', fullUrl, response.statusCode)
         })
 

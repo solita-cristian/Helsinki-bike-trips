@@ -13,18 +13,18 @@ export interface IError {
  * Base Error class
  */
 export abstract class Error implements IError {
-    readonly id: string;
-    readonly title: string;
-    readonly status: number;
-    readonly detail: string;
-    readonly instance: string;
+    readonly id: string
+    readonly title: string
+    readonly status: number
+    readonly detail: string
+    readonly instance: string
 
     protected constructor(id: string, title: string, status: number, detail: string, instance: string) {
-        this.id = id;
-        this.title = title;
-        this.status = status;
-        this.detail = detail;
-        this.instance = instance;
+        this.id = id
+        this.title = title
+        this.status = status
+        this.detail = detail
+        this.instance = instance
     }
 }
 

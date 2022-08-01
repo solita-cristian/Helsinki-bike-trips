@@ -1,7 +1,7 @@
 /**
  * Defines the only accepted languages of a station's name when retrieving stations
  */
-import {BaseParameters} from "./base";
+import {BaseParameters} from './base'
 
 export enum NameLanguage {
     FI = 'fi',
@@ -14,7 +14,7 @@ export enum NameLanguage {
  */
 export enum AddressLanguage {
     FI = 'fi',
-    SE = "se"
+    SE = 'se'
 }
 
 /**
