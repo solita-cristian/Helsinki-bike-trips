@@ -1,0 +1,14 @@
+type: "object"
+description: "A page of a variable amount of trips"
+properties:
+  data:
+    description: "The fetched trips"
+    type: "array"
+    items:
+      $ref: './trip.yaml'
+  page:
+    description: "The currently fetched page"
+    type: "integer"
+  perPage:
+    description: "The amount of items in the current page"
+    type: "integer"
