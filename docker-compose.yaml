@@ -20,22 +20,22 @@ services:
       dockerfile: 'Dockerfile'
       context: './backend'
     ports:
-      - '${BACKEND_PORT}:8080'
+      - '8080:8080'
     environment:
       - DB_USER=$DB_USER
       - DB_PASSWORD=$DB_PASSWORD
       - DB_PORT=5432
-      - BACKEND_PORT=$BACKEND_PORT
+      - BACKEND_PORT=8080
       - DB_DATABASE_NAME=postgres
       - DB_HOST=db
     links:
       - db
 
   frontend:
-    restart: always
-    container_name: frontend
-    build:
-      dockerfile: 'Dockerfile'
-      context: './frontend'
-    ports:
-      - '${FRONTEND_PORT}:80'
+      restart: always
+      container_name: frontend
+      build:
+        dockerfile: 'Dockerfile'
+        context: './frontend'
+      ports:
+        - '3000:80'

@@ -1,16 +1,19 @@
 import '../base'
 import {IError} from '../../src/models/errors'
-import {BaseTestInstance} from "../base";
-import {AppDataSource} from "../../src/database";
-import {StationStatistics} from "../../src/models/stationStatistics";
-import {StatisticsParameters} from "../../src/models/parameters/station";
+import {BaseTestInstance} from '../base'
+import {AppDataSource} from '../../src/database'
+import {StationStatistics} from '../../src/models/stationStatistics'
+import {StatisticsParameters} from '../../src/models/parameters/station'
 
 /**
  * Defines a test instance specifically for testing stations statistics
  */
 class StatisticsTestInstance extends BaseTestInstance {
+    /**
+     * Constructs a new test instance
+     */
     constructor() {
-        super('station', '/stations');
+        super('station', '/stations')
     }
 
     /**
@@ -18,40 +21,40 @@ class StatisticsTestInstance extends BaseTestInstance {
      * @param statistics The statistics object
      */
     verifyStatistics = (statistics: StationStatistics) => {
-        expect(statistics).toBeTruthy();
-        expect(statistics.topInbound).toHaveLength(5);
-        expect(statistics.topOutbound).toHaveLength(5);
-        expect(statistics.totalInbound).toBeTruthy();
-        expect(statistics.totalOutbound).toBeTruthy();
-        expect(statistics.averageDistanceInbound).toBeTruthy();
-        expect(statistics.averageDistanceOutbound).toBeTruthy();
+        expect(statistics).toBeTruthy()
+        expect(statistics.topInbound).toHaveLength(5)
+        expect(statistics.topOutbound).toHaveLength(5)
+        expect(statistics.totalInbound).toBeTruthy()
+        expect(statistics.totalOutbound).toBeTruthy()
+        expect(statistics.averageDistanceInbound).toBeTruthy()
+        expect(statistics.averageDistanceOutbound).toBeTruthy()
     }
 }
 
-const testInstance = new StatisticsTestInstance();
+const testInstance = new StatisticsTestInstance()
 
 beforeAll(async () => {
-    await AppDataSource.initialize();
+    await AppDataSource.initialize()
 })
 
 afterAll(async () => {
-    await AppDataSource.destroy();
+    await AppDataSource.destroy()
 })
 
-describe("Statistics", () => {
+describe('Statistics', () => {
     const validId = 501
     const invalidId = 9999
 
-    test("Should be returned when given valid ID", async () => {
+    test('Should be returned when given valid ID', async () => {
         const {response} = await testInstance.makeRequestWithParameters(`${validId}/stats`)
-        testInstance.verifyStatistics(response.body as StationStatistics);
+        testInstance.verifyStatistics(response.body as StationStatistics)
     })
 
-    test("Should return a '404 not found' error message when is not found", async () => {
-        const {fullUrl, response} = await testInstance.makeRequestWithParameters(`${invalidId}/stats`);
-        expect(response.statusCode).toBe(404);
+    test('Should return a \'404 not found\' error message when is not found', async () => {
+        const {fullUrl, response} = await testInstance.makeRequestWithParameters(`${invalidId}/stats`)
+        expect(response.statusCode).toBe(404)
 
-        testInstance.verifyNotFound(response.body as IError, response.statusCode, fullUrl, 'ID', invalidId)
+        testInstance.verifyNotFound(response.body as IError, response.statusCode, fullUrl, 'ID', invalidId.toString())
     })
 
     test('Should return a 400 bad parameter error when month query parameter is out of bounds',
@@ -59,8 +62,8 @@ describe("Statistics", () => {
             const parameters: StatisticsParameters = {
                 month: 0
             }
-            const {fullUrl, response} = await testInstance.makeRequestWithParameters(`${validId}/stats`, parameters);
-            expect(response.statusCode).toBe(400);
+            const {fullUrl, response} = await testInstance.makeRequestWithParameters(`${validId}/stats`, parameters)
+            expect(response.statusCode).toBe(400)
 
             testInstance.verifyBadParameter(response.body as IError, 'month', parameters.month, '1 <= month <= 12',
                 fullUrl, response.statusCode)
@@ -71,8 +74,8 @@ describe("Statistics", () => {
             const parameters: StatisticsParameters = {
                 month: 5
             }
-            const {response} = await testInstance.makeRequestWithParameters(`${validId}/stats`, parameters);
-            testInstance.verifyStatistics(response.body as StationStatistics);
+            const {response} = await testInstance.makeRequestWithParameters(`${validId}/stats`, parameters)
+            testInstance.verifyStatistics(response.body as StationStatistics)
 
         })
 

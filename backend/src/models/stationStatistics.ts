@@ -1,6 +1,6 @@
-import {stations} from "./stations";
-import {trips} from "./trips";
-import {AppDataSource} from "../database";
+import {stations} from './stations'
+import {trips} from './trips'
+import {AppDataSource} from '../database'
 
 /**
  * Defines the statistics of a station, specifically:
@@ -13,29 +13,29 @@ import {AppDataSource} from "../database";
  * - Top 5 most popular departure stations for journeys ending at the station
  */
 export class StationStatistics {
-    readonly averageDistanceInbound: number;
-    readonly averageDistanceOutbound: number;
-    topInbound: stations[];
-    topOutbound: stations[];
-    readonly totalInbound: number;
-    readonly totalOutbound: number;
+    readonly averageDistanceInbound: number
+    readonly averageDistanceOutbound: number
+    topInbound: stations[]
+    topOutbound: stations[]
+    readonly totalInbound: number
+    readonly totalOutbound: number
 
     private constructor(month: number | null, inboundTrips: trips[], outboundTrips: trips[]) {
         if (month) {
-            let inb = inboundTrips.filter(t => t.departure_time.getMonth() + 1 === month);
-            let outb = outboundTrips.filter(t => t.departure_time.getMonth() + 1 === month);
+            const inb = inboundTrips.filter(t => t.departure_time.getMonth() + 1 === month)
+            const outb = outboundTrips.filter(t => t.departure_time.getMonth() + 1 === month)
 
-            this.averageDistanceInbound = this.getAverageDistance(inb);
-            this.averageDistanceOutbound = this.getAverageDistance(outb);
+            this.averageDistanceInbound = this.getAverageDistance(inb)
+            this.averageDistanceOutbound = this.getAverageDistance(outb)
 
-            this.totalOutbound = outb.length;
-            this.totalInbound = inb.length;
+            this.totalOutbound = outb.length
+            this.totalInbound = inb.length
         } else {
-            this.averageDistanceInbound = this.getAverageDistance(inboundTrips);
-            this.averageDistanceOutbound = this.getAverageDistance(outboundTrips);
+            this.averageDistanceInbound = this.getAverageDistance(inboundTrips)
+            this.averageDistanceOutbound = this.getAverageDistance(outboundTrips)
 
-            this.totalInbound = inboundTrips.length;
-            this.totalOutbound = outboundTrips.length;
+            this.totalInbound = inboundTrips.length
+            this.totalOutbound = outboundTrips.length
         }
     }
 
@@ -46,13 +46,13 @@ export class StationStatistics {
      * the statistics using all the available data
      */
     static create = async (station: stations, month: number | null) => {
-        let inboundTrips = await station.inbound_trips;
-        let outboundTrips = await station.outbound_trips;
+        const inboundTrips = await station.inbound_trips
+        const outboundTrips = await station.outbound_trips
 
-        let stats = new StationStatistics(month, inboundTrips, outboundTrips);
-        await stats.setTopStations(month, station);
+        const stats = new StationStatistics(month, inboundTrips, outboundTrips)
+        await stats.setTopStations(month, station)
 
-        return stats;
+        return stats
     }
 
     /**
@@ -62,8 +62,8 @@ export class StationStatistics {
      * @param station The station the statistics refer to
      */
     private setTopStations = async (month: number | null, station: stations) => {
-        this.topInbound = await this.getTopStations(false, month, station.id);
-        this.topOutbound = await this.getTopStations(true, month, station.id);
+        this.topInbound = await this.getTopStations(false, month, station.id)
+        this.topOutbound = await this.getTopStations(true, month, station.id)
     }
 
     /**
@@ -74,19 +74,19 @@ export class StationStatistics {
      * @param stationId The ID of the requested station
      */
     private getTopStations = async (outbound: boolean, month: number | null, stationId: number) => {
-        const station = (outbound ? 'return' : 'departure') + '_station';
-        const opp_station = (outbound ? 'departure' : 'return') + '_station';
+        const station = (outbound ? 'return' : 'departure') + '_station'
+        const opp_station = (outbound ? 'departure' : 'return') + '_station'
         const trips_repository = AppDataSource.getRepository('trips')
 
         return (await trips_repository
             .createQueryBuilder('getTopStations')
             .select(`${station}, COUNT(*) as total`)
-            .where(`${month ? `extract(MONTH from departure_time) = :month and` : ''} ${opp_station} = :stationId`,
+            .where(`${month ? 'extract(MONTH from departure_time) = :month and' : ''} ${opp_station} = :stationId`,
                 month ? {month: month, stationId: stationId} : {stationId: stationId})
             .groupBy(`${station}`)
             .orderBy('total', 'DESC')
             .cache(true)
-            .getRawMany<stations>()).slice(0, 5);
+            .getRawMany<stations>()).slice(0, 5)
     }
 
     /**
@@ -95,7 +95,7 @@ export class StationStatistics {
      */
     private getAverageDistance = (trips: trips[]) => {
         const sumDistances = (accumulatedTotal: number, currentDistance: number) => {
-            return accumulatedTotal + currentDistance;
+            return accumulatedTotal + currentDistance
         }
 
         return parseFloat((trips
