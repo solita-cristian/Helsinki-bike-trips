@@ -45,7 +45,7 @@ get:
       schema:
         type: "array"
         items:
-          $ref: "./../schemas/trip.yaml"
+          $ref: "./../schemas/trips_page.yaml"
     400:
       description: "badly formatted or missing query parameters"
       schema:
