@@ -2,6 +2,7 @@ import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePag
 import React, { Fragment, ReactNode } from "react";
 import { Station } from "../../models/Stations";
 import Flag from 'react-world-flags';
+import { StationsParams } from "../../models/Params";
 
 interface Column {
     id: 'id' | 'name' | 'address' | 'city' | 'operator' | 'capacity',
@@ -74,8 +75,8 @@ const createData = (stations: Station[]): Data[] => {
 
 interface StationsTableProps {
     stations?: Station[],
-    params: {page: number, perPage: number},
-    updateParams: (newParams: Partial<{page: number, perPage: number}>) => void
+    params: StationsParams,
+    updateParams: (newParams: Partial<StationsParams>) => void
 }
 
 const StationsTable = ({stations, params, updateParams}: StationsTableProps) => {
