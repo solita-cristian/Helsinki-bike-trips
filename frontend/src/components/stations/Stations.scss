@@ -1,0 +1,20 @@
+.station-column-multiple-names {
+    vertical-align: middle;
+    align-items: center;
+
+    & .station-text {
+        text-align: left;
+        float: left;
+    }
+
+    & .flag {
+        text-align: right;
+        float: right;
+        height: 8;
+    }
+}
+
+.station-column-single-name {
+    vertical-align: middle;
+    text-align: center;
+}
