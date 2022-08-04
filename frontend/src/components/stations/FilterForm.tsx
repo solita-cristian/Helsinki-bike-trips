@@ -1,19 +1,15 @@
-import { Paper, Grid, Typography, TextField, InputAdornment, SelectChangeEvent, Button, IconButton } from '@mui/material'
-import React, { ChangeEvent, useState } from 'react'
-import { Params, StationsParams } from '../../models/Params'
-import { LanguageSelect, SupportedLanguage } from '../Forms/Selects/LanguageSelect'
-import TextFieldWithLanguage from '../Forms/TextFieldWithLanguage'
-import ClearIcon from '@mui/icons-material/Clear';
-import { VoidExpression } from 'typescript'
-
-const nameLanguages: SupportedLanguage[] = [
-    {code: 'fin', value: 'fi'},
-    {code: 'swe', value: 'se'},
-    {code: 'gbr', value: 'en'},
-]
+import { Paper, Grid, Typography, Button } from '@mui/material'
+import { ChangeEvent } from 'react'
+import { StationsParams } from '../../models/Params'
+import ClearIcon from '@mui/icons-material/Clear'
+import AdornedTextField from '../Forms/AdornedTextField'
+import BadgeIcon from '@mui/icons-material/Badge';
+import HomeIcon from '@mui/icons-material/Home';
+import LocationCityIcon from '@mui/icons-material/LocationCity';
+import BusinessIcon from '@mui/icons-material/Business';
 
 interface FilterFormProps {
-    params: Partial<StationsParams>,
+    params: Partial<StationsParams>
     updateParams: (params: Partial<StationsParams>) => void,
     clearParams: () => void
 }
@@ -30,22 +26,55 @@ export default function FilterForm({params, updateParams, clearParams}: FilterFo
                     Clear
                 </Button>
             </Grid>
-            <Grid item xs={6} sm={6} md={3}>
-                <TextFieldWithLanguage 
+            <Grid item xs={4}>
+                <AdornedTextField 
                     id='name'
                     label='Name'
-                    onTextChange={(e: ChangeEvent<HTMLInputElement>) => {updateParams({name: [e.target.value, params.name ? params.name[1] : undefined]})}}
-                    onLanguageChange={(e: SelectChangeEvent) => {updateParams({name: [params.name ? params.name[0] : undefined, e.target.value]})}}
-                    textValue={params.name ? params.name[0] : ''}
-                    languageValue={params.name ? params.name[1] : ''}
-                    supportedLanguages={nameLanguages}
+                    onTextChange={(e: ChangeEvent<HTMLInputElement>) => {updateParams({name: e.target.value})}}
+                    adornmentImage={<BadgeIcon />}
+                    type='text'
+                    value={params.name}
                 />
             </Grid>
-            <Grid item xs={8}>
-                Operator
+            <Grid item xs={4}>
+                <AdornedTextField 
+                    id='address'
+                    label='Address'
+                    onTextChange={(e: ChangeEvent<HTMLInputElement>) => {updateParams({address: e.target.value})}}
+                    adornmentImage={<HomeIcon />}
+                    type='text'
+                    value={params.address}
+                />
             </Grid>
             <Grid item xs={4}>
-                Capacity
+                <AdornedTextField 
+                    id='city'
+                    label='City'
+                    onTextChange={(e: ChangeEvent<HTMLInputElement>) => {updateParams({city: e.target.value})}}
+                    adornmentImage={<LocationCityIcon />}
+                    type='text'
+                    value={params.city}
+                />
+            </Grid>
+            <Grid item xs={6}>
+                <AdornedTextField 
+                    id='operator'
+                    label='Operator'
+                    onTextChange={(e: ChangeEvent<HTMLInputElement>) => {updateParams({operator: e.target.value})}}
+                    adornmentImage={<BusinessIcon />}
+                    type='text'
+                    value={params.operator}
+                />
+            </Grid>
+            <Grid item xs={6}>
+                <AdornedTextField 
+                    id='capacity'
+                    label='Capacity'
+                    onTextChange={(e: ChangeEvent<HTMLInputElement>) => {updateParams({capacity: parseInt(e.target.value)})}}
+                    adornmentImage={<BusinessIcon />}
+                    type='number'
+                    value={params.capacity}
+                />
             </Grid>
         </Grid>
     </Paper>
