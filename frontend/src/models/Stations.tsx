@@ -12,9 +12,3 @@ export type Station = {
     x: number,
     y: number
 }
-
-export type StationPage = {
-    data: Station[],
-    page: number,
-    perPage: number
-}
