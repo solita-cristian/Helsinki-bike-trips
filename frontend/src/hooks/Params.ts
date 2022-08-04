@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Reducer, useMemo, useReducer, useState } from "react";
+import { Reducer, useMemo, useReducer } from "react";
 import debounce from 'lodash.debounce'
 
 interface Action<D> {
@@ -32,18 +32,6 @@ function useParams<D>(initialParams: D, debounceWait = 100) {
     return {
         params,
         debouncedUpdateParams: (updatedParams: Partial<D>) => {
-            console.log(updatedParams)
-            Object.keys(updatedParams).forEach(
-                key => {
-                    const v = updatedParams[key as keyof typeof updatedParams];
-                    if (v === undefined)
-                        delete updatedParams[key as keyof typeof updatedParams];
-                    else if(Array.isArray(v) && v.includes(undefined)) {
-                        if(v[0] === undefined) v[0] = ''
-                        else if(v[1] === undefined) v[1] = ''
-                    }
-                })
-                console.log(updatedParams)
             debouncedSetParams(updatedParams)
         },
         clearParams: () => {

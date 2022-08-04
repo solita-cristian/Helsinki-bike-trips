@@ -4,9 +4,9 @@ export interface Params {
 }
 
 export interface StationsParams extends Params {
-    name?: [string | undefined, string | undefined],
-    address?: [string | undefined, string | undefined],
-    city?: [string | undefined, string | undefined],
+    name?: string,
+    address?: string,
+    city?: string,
     operator?: string,
     capacity?: number
 }
