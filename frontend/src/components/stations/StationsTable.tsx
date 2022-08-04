@@ -3,6 +3,7 @@ import React, { Fragment, ReactNode } from "react";
 import { Station } from "../../models/Stations";
 import Flag from 'react-world-flags';
 import { StationsParams } from "../../models/Params";
+import { StationPage } from "../../models/Page";
 
 interface Column {
     id: 'id' | 'name' | 'address' | 'city' | 'operator' | 'capacity',
@@ -74,7 +75,7 @@ const createData = (stations: Station[]): Data[] => {
 }
 
 interface StationsTableProps {
-    stations?: Station[],
+    stations?: StationPage,
     params: StationsParams,
     updateParams: (newParams: Partial<StationsParams>) => void
 }
@@ -95,8 +96,8 @@ const StationsTable = ({stations, params, updateParams}: StationsTableProps) => 
                     </TableHead>
                     <TableBody>
                         {
-                            stations ?
-                                createData(stations).map((station, index) => (
+                            stations?.data ?
+                                createData(stations?.data).map((station, index) => (
                                     <TableRow hover role='checkbox' tabIndex={-1} key={index}>
                                         <TableCell>{station.id}</TableCell>
                                         <TableCell>{station.name}</TableCell>
@@ -114,7 +115,7 @@ const StationsTable = ({stations, params, updateParams}: StationsTableProps) => 
             <TablePagination
                 rowsPerPageOptions={[10, 25, 100]}
                 component="div"
-                count={stations ? stations.length : 0}
+                count={stations ? stations.total : 0}
                 rowsPerPage={params.perPage}
                 page={params.page}
                 onPageChange={(e, newPage) => {updateParams({page: newPage})}}

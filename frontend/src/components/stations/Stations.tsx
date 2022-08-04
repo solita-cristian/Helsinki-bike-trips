@@ -2,11 +2,12 @@
 import { Fragment } from 'react'
 import useApi from '../../hooks/Api'
 import useParams from '../../hooks/Params'
-import { StationPage } from '../../models/Stations'
+import { StationPage } from '../../models/Page'
 import StationsTable from './StationsTable'
 import './Stations.scss'
 import FilterForm from './FilterForm'
 import { StationsParams } from '../../models/Params'
+import { CircularProgress, Typography } from '@mui/material'
 
 
 function Stations() {
@@ -24,12 +25,19 @@ function Stations() {
         params: params
     })
 
-    console.log(response, error, isLoading)
+    console.log(response, error)
 
     if(error && !response) {
         return (
             <Fragment>
-                
+                <Typography variant='h6'>An error occured. Please try reloading the page</Typography>
+            </Fragment>
+        )
+    }
+    else if(isLoading) {
+        return (
+            <Fragment>
+                <CircularProgress />
             </Fragment>
         )
     }
@@ -40,7 +48,7 @@ function Stations() {
             {error && !response ?
                 <p>{error.message}</p> : 
                 <StationsTable 
-                    stations={response?.data}
+                    stations={response}
                     params={params as Required<StationsParams>}
                     updateParams={debouncedUpdateParams} />
             }
