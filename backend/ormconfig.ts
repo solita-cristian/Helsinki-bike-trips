@@ -1,4 +1,5 @@
 import {PostgresConnectionOptions} from 'typeorm/driver/postgres/PostgresConnectionOptions'
+import 'dotenv/config'
 
 /**
  * Defines the data source configuration
@@ -11,7 +12,7 @@ export const databaseConfiguration: PostgresConnectionOptions = {
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE_NAME,
     synchronize: true,
-    logging: true,
+    logging: false,
     entities: [__dirname + '/src/models/**/*.{js,ts}'],
     subscribers: [],
     migrations: [],
