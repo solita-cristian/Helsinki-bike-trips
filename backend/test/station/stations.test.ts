@@ -2,7 +2,7 @@ import '../base'
 import {IError} from '../../src/models/errors'
 import {BaseTestInstance, page, perPage, testPagination} from '../base'
 import {StationsPage} from '../../src/models/page'
-import {AddressLanguage, NameLanguage, StationParameters} from '../../src/models/parameters/station'
+import {StationParameters} from '../../src/models/parameters/station'
 import {AppDataSource} from '../../src/database'
 
 /**
@@ -25,10 +25,7 @@ class StationsTestInstance extends BaseTestInstance {
         if (parameters)
             for (const [key, value] of Object.entries(parameters)) {
                 if (value != undefined)
-                    if (['city', 'name', 'address'].includes(key))
-                        queryParameters += `${key}=${value[0]}&${key}=${value[1]}&`
-                    else
-                        queryParameters += `${key}=${value}&`
+                    queryParameters += `${key}=${value}&`
             }
         return queryParameters
     }
@@ -52,7 +49,7 @@ describe('Stations', () => {
 
     test('Should return a list of station satisfying city parameter', async () => {
         const parameters: StationParameters = {
-            city: ['Espoo', AddressLanguage.FI],
+            city: 'Espoo',
             page: page,
             perPage: perPage
         }
@@ -66,23 +63,9 @@ describe('Stations', () => {
 
     })
 
-    test('Should return a 400 bad parameter error when city query parameter has invalid language',
-        async () => {
-            const parameters: StationParameters = {
-                city: ['Espoo', 'en' as AddressLanguage],
-                page: page,
-                perPage: perPage
-            }
-            const {fullUrl, response} = await testInstance.makeRequestWithParameters(undefined, parameters)
-            expect(response.statusCode).toBe(400)
-
-            testInstance.verifyBadParameter(response.body as IError, 'city', parameters.city,
-                'language in [fi, se]', fullUrl, response.statusCode)
-        })
-
     test('Should return a list of station satisfying address parameter', async () => {
         const parameters: StationParameters = {
-            address: ['Gallen-Kallelas', AddressLanguage.SE],
+            address: 'Gallen-Kallelas',
             page: page,
             perPage: perPage
         }
@@ -95,20 +78,6 @@ describe('Stations', () => {
         stations.data.forEach(s => expect(s.address_se).toContain('Gallen-Kallelas'))
 
     })
-
-    test('Should return a 400 bad parameter error when address query parameter has invalid language',
-        async () => {
-            const parameters: StationParameters = {
-                address: ['Gallen-Kallelas', 'en' as AddressLanguage],
-                page: page,
-                perPage: perPage
-            }
-            const {fullUrl, response} = await testInstance.makeRequestWithParameters(undefined, parameters)
-            expect(response.statusCode).toBe(400)
-
-            testInstance.verifyBadParameter(response.body as IError, 'address', parameters.address,
-                'language in [fi, se]', fullUrl, response.statusCode)
-        })
 
     test('Should return a list of station satisfying capacity parameter', async () => {
         const parameters: StationParameters = {
@@ -156,7 +125,7 @@ describe('Stations', () => {
 
     test('Should return a list of station satisfying name parameter', async () => {
         const parameters: StationParameters = {
-            name: ['Sepetlahdentie', NameLanguage.FI],
+            name: 'Sepetlahdentie',
             page: page,
             perPage: perPage
         }
@@ -170,24 +139,11 @@ describe('Stations', () => {
 
     })
 
-    test('Should return a 400 bad parameter error when name query parameter has invalid language',
-        async () => {
-            const parameters: StationParameters = {
-                name: ['Sepetlahdentie', 'ro' as NameLanguage],
-                page: page,
-                perPage: perPage
-            }
-            const {fullUrl, response} = await testInstance.makeRequestWithParameters(undefined, parameters)
-            expect(response.statusCode).toBe(400)
-
-            testInstance.verifyBadParameter(response.body as IError, 'name', parameters.name,
-                'language in [fi, se, en]', fullUrl, response.statusCode)
-        })
-
+    
     test('Should return a list of station satisfying multiple parameters', async () => {
         const parameters: StationParameters = {
-            name: ['Framnäsvägen', NameLanguage.SE],
-            address: ['Kalastajantie 6', AddressLanguage.FI],
+            name: 'Framnäsvägen',
+            address: 'Kalastajantie 6',
             operator: 'CityBike',
             page: page,
             perPage: perPage
