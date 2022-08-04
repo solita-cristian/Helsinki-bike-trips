@@ -37,5 +37,10 @@ services:
       build:
         dockerfile: 'Dockerfile'
         context: './frontend'
+        args:
+          - REACT_APP_BACKEND_PORT=8080
+          - REACT_APP_BACKEND_HOST=backend
       ports:
         - '3000:80'
+      links:
+        - backend

@@ -7,7 +7,7 @@ interface Action<D> {
     payload: Partial<D>
 }
 
-function useParams<D>(initialParams: D, debounceWait = 100) {
+function useParams<D>(initialParams: D, debounceWait = 500) {
 
     const reducer = (state: Partial<D>, action: Action<D>) => {
         switch(action.type) {

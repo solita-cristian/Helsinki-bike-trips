@@ -12,7 +12,7 @@ import { CircularProgress, Typography } from '@mui/material'
 
 function Stations() {
     const {params, debouncedUpdateParams, clearParams} = useParams<StationsParams>({
-        page: 1,
+        page: 0,
         perPage: 10,
         name: undefined,
         address: undefined,
@@ -21,11 +21,9 @@ function Stations() {
         capacity: undefined
     })
     const {response, error, isLoading} = useApi<StationPage>({
-        baseURL: 'http://localhost:8080/stations',
+        baseURL: `http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/stations`,
         params: params
     })
-
-    console.log(response, error)
 
     if(error && !response) {
         return (
