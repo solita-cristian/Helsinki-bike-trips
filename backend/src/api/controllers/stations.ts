@@ -71,11 +71,13 @@ export class StationsController extends BaseController<stations> {
                 builder.andWhere('capacity = :capacity', {capacity: parameters.capacity})
             }
 
+            const response = await builder.getManyAndCount()
+
             this.sendResult(res, new StationsPage(
-                await builder.getMany(),
+                response[0],
                 parameters.page as number,
                 parameters.perPage as number,
-                stationsCount
+                response[1]
             ))
         }
     }
