@@ -3,7 +3,7 @@ import {AppDataSource} from '../../database'
 import {stations} from '../../models/stations'
 import {BaseController} from './base'
 import {StationsPage} from '../../models/page'
-import {AddressLanguage, NameLanguage, StationParameters} from '../../models/parameters/station'
+import {StationParameters} from '../../models/parameters/station'
 import {StationStatistics} from '../../models/stationStatistics'
 
 
@@ -47,41 +47,35 @@ export class StationsController extends BaseController<stations> {
             }
 
             if (parameters.city) {
-                if (!Object.values(AddressLanguage).includes(parameters.city[1] as AddressLanguage))
-                    return this.badParameterError(req, res, 'city', parameters.city, 'language in [fi, se]')
-                builder.andWhere(`city_${parameters.city[1]} = :city`,
-                    {city: parameters.city[0]})
+                builder.andWhere('city_fi LIKE :city', {city: `%${parameters.city}%`})
+                builder.orWhere('city_se LIKE :city', {city: `%${parameters.city}%`})
             }
 
             if (parameters.address) {
-                if (!Object.values(AddressLanguage).includes(parameters.address[1] as AddressLanguage))
-                    return this.badParameterError(req, res, 'address', parameters.address, 'language in [fi, se]')
-                builder.andWhere(`address_${parameters.address[1]} like :address`,
-                    {address: `%${parameters.address[0]}%`})
+                builder.andWhere('address_fi like :address', {address: `%${parameters.address}%`})
+                builder.orWhere('address_se like :address', {address: `%${parameters.address}%`})
             }
 
             if (parameters.name) {
-                if (!Object.values(NameLanguage).includes(parameters.name[1] as NameLanguage))
-                    return this.badParameterError(req, res, 'name', parameters.name, 'language in [fi, se, en]')
-                builder.andWhere(`name_${parameters.name[1]} = :name`,
-                    {name: parameters.name[0]})
+                builder.andWhere('name_fi LIKE :name', {name: `%${parameters.name}%`})
+                builder.orWhere('name_se LIKE :name', {name: `%${parameters.name}%`})
+                builder.orWhere('name_en LIKE :name', {name: `%${parameters.name}%`})
             }
 
             if (parameters.operator)
-                builder.andWhere('operator like :operator',
-                    {operator: `%${parameters.operator}%`})
+                builder.andWhere('operator like :operator', {operator: `%${parameters.operator}%`})
 
             if (parameters.capacity) {
                 if (parameters.capacity < 0)
                     return this.badParameterError(req, res, 'capacity', parameters.capacity, '>= 0')
-                builder.andWhere('capacity = :capacity',
-                    {capacity: parameters.capacity})
+                builder.andWhere('capacity = :capacity', {capacity: parameters.capacity})
             }
 
             this.sendResult(res, new StationsPage(
                 await builder.getMany(),
                 parameters.page as number,
-                parameters.perPage as number
+                parameters.perPage as number,
+                stationsCount
             ))
         }
     }
