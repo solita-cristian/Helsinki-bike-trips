@@ -39,7 +39,7 @@ export class StationsController extends BaseController<stations> {
 
             switch (this.paginate<stations>(req, res, parameters, builder, stationsCount)) {
             case -1:
-                return this.badParameterError(req, res, 'page', parameters.page, '>= 1')
+                return this.badParameterError(req, res, 'page', parameters.page, '>= 0')
             case -2:
                 return this.badParameterError(req, res, 'perPage', parameters.perPage, `1 <= perPage <= ${stationsCount}`)
             default:
