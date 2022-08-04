@@ -18,24 +18,19 @@ get:
       description: "How many items per page will get fetched"
     - name: "city"
       in: "query"
-      description: "An array containing the city name and the specified language [fi, se]"
-      type: "array"
-      items:
-        type: "string"
-      collectionFormat: multi
+      description: "The name of the city"
+      type: "string"
       required: false
     - name: "address"
       in: "query"
-      description: "An array containing the address and the specified language [fi, se]"
-      type: "array"
-      items:
-        type: "string"
-      collectionFormat: multi
+      description: "The address"
+      type: "string"
       required: false
     - name: "operator"
       in: "query"
-      type: "string"
       description: "The operator"
+      type: "string"
+      required: false
     - name: "capacity"
       in: "query"
       type: "integer"
@@ -43,11 +38,8 @@ get:
       required: false
     - name: "name"
       in: "query"
-      description: "An array containing the name of the station and the specified language [fi, se, en]"
-      type: "array"
-      items:
-        type: "string"
-      collectionFormat: multi
+      description: "The name of the station"
+      type: "string"
       required: false
   responses:
     "200":

@@ -12,3 +12,6 @@ properties:
   perPage:
     description: "The amount of items in the current page"
     type: "integer"
+  total:
+    description: "The total amount of trips in the database"
+    type: "integer"

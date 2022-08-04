@@ -98,7 +98,8 @@ export class TripsController extends BaseController<trips> {
             this.sendResult(res, new TripsPage(
                 await builder.getMany(),
                 parameters.page as number,
-                parameters.perPage as number
+                parameters.perPage as number,
+                tripsCount
             ))
 
         }

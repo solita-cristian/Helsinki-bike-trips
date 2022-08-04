@@ -7,7 +7,8 @@ import {trips} from './trips'
 interface IPage<T> {
     data: T[]
     perPage: number,
-    page: number
+    page: number,
+    total: number
 }
 
 /**
@@ -17,11 +18,13 @@ export abstract class Page<T> implements IPage<T> {
     public data: T[]
     public page: number
     public perPage: number
+    public total: number
 
-    constructor(data: T[], page: number | string, perPage: number | string) {
+    constructor(data: T[], page: number | string, perPage: number | string, total: number) {
         this.data = data
         this.page = (typeof page === 'string' ? parseInt(page) : page)
         this.perPage = (typeof perPage === 'string' ? parseInt(perPage) : perPage)
+        this.total = total
     }
 }
 

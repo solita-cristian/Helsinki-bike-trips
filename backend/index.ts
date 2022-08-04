@@ -1,5 +1,6 @@
 import {AppDataSource} from './src/database'
 import {makeApp} from './src/app'
+import 'dotenv/config'
 
 const port = process.env.BACKEND_PORT
 
