@@ -77,12 +77,12 @@ export class BaseController<Entity extends ObjectLiteral> {
      * @param maxPerPage The maximum amount of items per page.
      */
     paginate<T>(req: Request, res: Response, parameters: BaseParameters, builder: SelectQueryBuilder<T>, maxPerPage: number) {
-        if (!parameters.page || parameters.page < 1)
+        if (!parameters.page || parameters.page < 0)
             return -1
         else if (!parameters.perPage || parameters.perPage < 1 || parameters.perPage > maxPerPage)
             return -2
 
-        builder.offset((parameters.page - 1) * parameters.perPage)
+        builder.offset((parameters.page) * parameters.perPage)
         builder.limit(parameters.perPage)
         return 0
     }
