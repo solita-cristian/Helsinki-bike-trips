@@ -1,49 +1,10 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from "@mui/material";
-import React, { Fragment, ReactNode } from "react";
-import { Station } from "../../models/Stations";
+import React from "react";
+import { Station } from "../../models/Station";
 import Flag from 'react-world-flags';
 import { StationsParams } from "../../models/Params";
 import { StationPage } from "../../models/Page";
-
-interface Column {
-    id: 'id' | 'name' | 'address' | 'city' | 'operator' | 'capacity',
-    label: string
-}
-
-const columns: Column[] = [
-    {id: 'id', label: 'ID'},
-    {id: 'name', label: 'Name'},
-    {id: 'address', label: 'Address'},
-    {id: 'city', label: 'City'},
-    {id: 'operator', label: 'Operator'},
-    {id: 'capacity', label: 'Capacity'},
-]
-
-interface Data {
-    id: ReactNode,
-    name: ReactNode,
-    address: ReactNode,
-    city: ReactNode,
-    operator: ReactNode,
-    capacity: ReactNode
-}
-
-
-const constructCity = (station: Station, language: 'fi' | 'se') => {
-    if(language === 'fi' && station.city_fi)
-            return (
-                <>
-                <span className="station-text">{station.city_fi}</span><Flag code='fin' height={12} className='flag'/>
-                </>
-            )
-    else if(language === 'se' && station.city_se)
-        return (
-            <>
-            <span className="station-text">{station.city_se}</span><Flag code='swe' height={12} className='flag'/>
-            </>
-        )
-    return (<></>)
-}
+import { columns, constructCity, Data } from "./base";
 
 const createData = (stations: Station[]): Data[] => {
     return stations.map(station => {
