@@ -1,7 +1,7 @@
 
 import { Fragment } from 'react'
 import useApi from '../../hooks/Api'
-import useParams from '../../hooks/Params'
+import useQueryParams from '../../hooks/Params'
 import { StationPage } from '../../models/Page'
 import StationsTable from './StationsTable'
 import './Stations.scss'
@@ -11,7 +11,7 @@ import { CircularProgress, Typography } from '@mui/material'
 
 
 function Stations() {
-    const {params, debouncedUpdateParams, clearParams} = useParams<StationsParams>({
+    const {params, debouncedUpdateParams, clearParams} = useQueryParams<StationsParams>({
         page: 0,
         perPage: 10,
         name: '',
