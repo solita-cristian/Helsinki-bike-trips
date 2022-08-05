@@ -14,10 +14,10 @@ function Stations() {
     const {params, debouncedUpdateParams, clearParams} = useParams<StationsParams>({
         page: 0,
         perPage: 10,
-        name: undefined,
-        address: undefined,
-        city: undefined,
-        operator: undefined,
+        name: '',
+        address: '',
+        city: '',
+        operator: '',
         capacity: undefined
     })
     const {response, error, isLoading} = useApi<StationPage>({
@@ -42,10 +42,11 @@ function Stations() {
 
     return (
         <Fragment>
-            <FilterForm params={params} updateParams={debouncedUpdateParams} clearParams={clearParams}/>
+            <FilterForm params={params} updateParams={debouncedUpdateParams} clearParams={clearParams} key='form'/>
             {error && !response ?
                 <p>{error.message}</p> : 
-                <StationsTable 
+                <StationsTable
+                    key='stations-table'
                     stations={response}
                     params={params as Required<StationsParams>}
                     updateParams={debouncedUpdateParams} />
