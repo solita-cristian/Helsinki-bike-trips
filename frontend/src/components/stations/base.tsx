@@ -18,7 +18,7 @@ export const columns: Column[] = [
 ]
 
 export interface Data {
-    id: ReactNode,
+    id: number,
     name: ReactNode,
     address: ReactNode,
     city: ReactNode,

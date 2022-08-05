@@ -5,13 +5,12 @@ import Flag from 'react-world-flags';
 import { StationsParams } from "../../models/Params";
 import { StationPage } from "../../models/Page";
 import { columns, constructCity, Data } from "./base";
+import {Link} from 'react-router-dom'
 
 const createData = (stations: Station[]): Data[] => {
     return stations.map(station => {
         return {
-            id: <p className="station-column-single-name">
-                {station.id}
-            </p>,
+            id: station.id,
             name: <p className="station-column-multiple-names">
                 <span className="station-text">{station.name_fi}</span><Flag code='fin' height={12} className='flag'/><br/>
                 <span className="station-text">{station.name_se}</span><Flag code='swe' height={12} className='flag'/><br/>
@@ -60,7 +59,9 @@ const StationsTable = ({stations, params, updateParams}: StationsTableProps) => 
                             stations?.data ?
                                 createData(stations?.data).map((station, index) => (
                                     <TableRow hover role='checkbox' tabIndex={-1} key={index}>
-                                        <TableCell>{station.id}</TableCell>
+                                        <TableCell><Link to={`/stations/${station.id}`}><p className="station-column-single-name">
+                                            {station.id}
+                                        </p></Link></TableCell>
                                         <TableCell>{station.name}</TableCell>
                                         <TableCell>{station.address}</TableCell>
                                         <TableCell>{station.city}</TableCell>

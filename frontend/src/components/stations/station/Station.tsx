@@ -1,4 +1,4 @@
-import { CircularProgress, Grid, Table, TableCell, TableHead, TableRow, Typography } from '@mui/material'
+import { CircularProgress, Grid, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material'
 import { Fragment, useState } from 'react'
 import Flag from 'react-world-flags'
 import useApi from '../../../hooks/Api'
@@ -10,10 +10,9 @@ import 'leaflet/dist/leaflet.css'
 import './Station.scss'
 import L from 'leaflet'
 import marker from './marker.svg'
+import {useParams} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 
-interface StationProps {
-    id: number
-}
 
 const getMarker = () => {
     return L.icon({
@@ -43,7 +42,9 @@ const TripsData = (stats: StationStatistics, inbound = true) => {
                 stats.topInbound.map(s => {
                     return (
                         <TableRow key={s.departure_station}>
-                            <TableCell>{s.departure_station}</TableCell>
+                            <TableCell><Link to={`/stations/${s.departure_station}`}><p className="station-column-single-name">
+                                            {s.departure_station}
+                                        </p></Link></TableCell>
                             <TableCell align='right'>{s.total}</TableCell>
                         </TableRow>
                     )
@@ -51,7 +52,9 @@ const TripsData = (stats: StationStatistics, inbound = true) => {
                 stats.topOutbound.map(s => {
                     return (
                         <TableRow key={s.return_station}>
-                            <TableCell>{s.return_station}</TableCell>
+                            <TableCell><Link to={`/stations/${s.return_station}`}><p className="station-column-single-name">
+                                            {s.return_station}
+                                        </p></Link></TableCell>
                             <TableCell align='right'>{s.total}</TableCell>
                         </TableRow>
                     )
@@ -62,9 +65,7 @@ const TripsData = (stats: StationStatistics, inbound = true) => {
 
 const createData = (station: Station): Data => {
     return {
-        id: <p className="station-column-single-name">
-            {station.id}
-        </p>,
+        id: station.id,
         name: <p className="station-column-multiple-names">
             <span className="station-text">{station.name_fi}</span><Flag code='fin' height={12} className='flag'/><br/>
             <span className="station-text">{station.name_se}</span><Flag code='swe' height={12} className='flag'/><br/>
@@ -105,15 +106,17 @@ const StationData = (station?: Station, stats?: StationStatistics) => {
     
     return (
             <Table stickyHeader sx={{width: '70%'}}>
-                <TableRow>
-                    <TableCell colSpan={2}><strong>Name</strong></TableCell>
-                    <TableCell align='right' colSpan={3}>{s.name}</TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell colSpan={2}><strong>Address</strong></TableCell>
-                    <TableCell align='right' colSpan={3}>{s.address}</TableCell>
-                </TableRow>
-                {StationStats(stats)}
+                <TableBody>
+                    <TableRow>
+                        <TableCell colSpan={2}><strong>Name</strong></TableCell>
+                        <TableCell align='right' colSpan={3}>{s.name}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell colSpan={2}><strong>Address</strong></TableCell>
+                        <TableCell align='right' colSpan={3}>{s.address}</TableCell>
+                    </TableRow>
+                    {StationStats(stats)}
+                </TableBody>
             </Table>
     )
 }
@@ -137,16 +140,18 @@ const Map = (station?: Station) => {
 }
 
 
-export default function StationPage({id}: StationProps) {
+export default function StationPage() {
+
+    const params = useParams()
 
     const [month, setMonth] = useState(undefined)
 
     const station = useApi<Station>({
-        baseURL: `http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/stations/${id}`,
+        baseURL: `http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/stations/${params.id}`,
     })
 
     const statistics = useApi<StationStatistics>({
-        baseURL: `http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/stations/${id}/stats`,
+        baseURL: `http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/stations/${params.id}/stats`,
         params: {
             month
         }
@@ -162,8 +167,8 @@ export default function StationPage({id}: StationProps) {
 
     return (
         <Fragment>
-            <Typography variant='h3'>
-                Station {id}
+            <Typography variant='h3' sx={{mt: 1, textAlign: 'center'}}>
+                Station {params.id}
             </Typography>
             <Grid container>
                 <Grid item md={5} sx={{mt: 2}}>
