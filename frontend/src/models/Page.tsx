@@ -1,4 +1,4 @@
-import { Station } from "./Stations"
+import { Station } from "./Station"
 
 interface IPage<T> {
     data: T[]
