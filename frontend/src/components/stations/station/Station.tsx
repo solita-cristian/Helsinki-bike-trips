@@ -5,9 +5,21 @@ import useApi from '../../../hooks/Api'
 import {Station} from '../../../models/Station'
 import { StationStatistics } from '../../../models/Statistics'
 import { constructCity, Data } from '../base'
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import 'leaflet/dist/leaflet.css'
+import './Station.scss'
+import L from 'leaflet'
+import marker from './marker.svg'
 
 interface StationProps {
     id: number
+}
+
+const getMarker = () => {
+    return L.icon({
+        iconUrl: marker,
+        iconSize: L.point(40,40)
+    })
 }
 
 const TripsData = (stats: StationStatistics, inbound = true) => {
@@ -106,6 +118,24 @@ const StationData = (station?: Station, stats?: StationStatistics) => {
     )
 }
 
+const Map = (station?: Station) => {
+    if(!station) return (<><p>Could not fetch station. Please try again</p></>)
+
+    return (
+        <MapContainer center={[station.y, station.x]} zoom={13} scrollWheelZoom={true}>
+            <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <Marker position={[station.y, station.x]} icon={getMarker()}>
+                <Popup>
+                    <p>{station.address_fi}</p>
+                </Popup>
+            </Marker>
+        </MapContainer>
+    )
+}
+
 
 export default function StationPage({id}: StationProps) {
 
@@ -136,8 +166,10 @@ export default function StationPage({id}: StationProps) {
                 Station {id}
             </Typography>
             <Grid container>
-                <Grid item md={6}></Grid>
-                <Grid item md={6} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <Grid item md={5} sx={{mt: 2}}>
+                    {Map(station.response)}
+                </Grid>
+                <Grid item md={7} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 2}}>
                     {StationData(station.response, statistics.response)}
                 </Grid>
             </Grid>
