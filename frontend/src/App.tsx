@@ -1,11 +1,11 @@
 import React from 'react';
 import './App.css';
-import Stations from './components/stations/Stations';
+import StationPage from './components/stations/station/Station';
 
 function App() {
   return (
     <div className="App">
-        <Stations />
+        <StationPage  id={501} />
     </div>
   );
 }
