@@ -13,16 +13,22 @@ interface TextFieldProps {
 export default function AdornedTextField({id, label, onTextChange, adornmentImage, type, value}: TextFieldProps) {
   return (
     <TextField
+        sx={{
+          width:'80%'
+        }}
+        key={id}
         label={label}
         id={id}
         InputProps={{
             endAdornment: <InputAdornment position='end'>
               {adornmentImage}
-            </InputAdornment>
+            </InputAdornment>,
         }}
         onChange={onTextChange}
         type={type}
         value={value}
+        variant='standard'
+        size='small'
     />
   )
 }
