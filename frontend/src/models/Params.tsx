@@ -10,3 +10,10 @@ export interface StationsParams extends Params {
     operator?: string,
     capacity?: number
 }
+
+export interface TripsParams extends Params {
+    departure?: number
+    return?: number
+    duration?: number
+    distance?: number
+}
