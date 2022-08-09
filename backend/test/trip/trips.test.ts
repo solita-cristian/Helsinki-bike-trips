@@ -145,4 +145,39 @@ describe('Trips', () => {
             testInstance.verifyBadParameter(response.body as IError, 'return', parameters.return,
                 'that the referenced station exists', fullUrl, response.statusCode)
         })
+    
+    test('Should return a list of stations with departure time starting from a valid value',
+        async () => {
+            const parameters: TripParameters = {
+                page: page,
+                perPage: perPage,
+                departureTime: new Date(2021, 5, 1, 0, 0, 0)
+            }
+            const {response} = await testInstance.makeRequestWithParameters(undefined, parameters)
+            expect(response.statusCode).toEqual(200)
+            const trips: TripsPage = response.body
+
+            expect(trips.data.length).toBeGreaterThan(0)
+            trips.data.forEach(trip => expect(
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                Date.parse(trip.departure_time.toString())).toBeGreaterThanOrEqual(Date.parse(parameters.departureTime!.toString())))
+
+        })
+    
+    test('Should return a list of stations with return time at most a valid value',
+        async () => {
+            const parameters: TripParameters = {
+                page: page,
+                perPage: perPage,
+                returnTime: new Date(2021, 6, 31, 0, 0, 0)
+            }
+            const {response} = await testInstance.makeRequestWithParameters(undefined, parameters)
+            expect(response.statusCode).toEqual(200)
+            const trips: TripsPage = response.body
+
+            expect(trips.data.length).toBeGreaterThan(0)
+            trips.data.forEach(trip => expect(
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                Date.parse(trip.departure_time.toString())).toBeGreaterThanOrEqual(Date.parse(parameters.departureTime!.toString())))
+        })
 })

@@ -39,6 +39,18 @@ get:
       type: "number"
       format: "float"
       description: "The duration of the trip in seconds"
+    - name: "departureTime"
+      in: "query"
+      required: false
+      type: "string"
+      format: "date-time"
+      description: "The departure time of the trips"
+    - name: "returnTime"
+      in: "query"
+      required: false
+      type: "string"
+      format: "date-time"
+      description: "The return time of the trips"
   responses:
     200:
       description: "successful operation"

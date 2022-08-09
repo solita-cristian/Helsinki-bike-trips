@@ -47,6 +47,8 @@ export class TripsController extends BaseController<trips> {
                 parseInt(req.query.return as string),
                 parseFloat(req.query.distance as string),
                 parseFloat(req.query.duration as string),
+                req.query.departureTime ? new Date(req.query.departureTime as string) : undefined,
+                req.query.returnTime ? new Date(req.query.returnTime as string) : undefined,
             )
 
 
@@ -93,6 +95,14 @@ export class TripsController extends BaseController<trips> {
                     return this.badParameterError(req, res, 'return', parameters.return, 'that the referenced station exists')
                 builder.andWhere('return_station = :return_station',
                     {return_station: parameters.return})
+            }
+
+            if(parameters.departureTime) {
+                builder.andWhere('departure_time >= :departure_time', {departure_time: parameters.departureTime})
+            }
+
+            if(parameters.returnTime) {
+                builder.andWhere('return_time <= :return_time', {return_time: parameters.returnTime})
             }
 
             this.sendResult(res, new TripsPage(
