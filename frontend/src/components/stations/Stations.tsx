@@ -5,7 +5,7 @@ import useQueryParams from '../../hooks/Params'
 import { StationPage } from '../../models/Page'
 import StationsTable from './StationsTable'
 import './Stations.scss'
-import FilterForm from './FilterForm'
+import StationsFilterForm from '../form/StationsFilterForm'
 import { StationsParams } from '../../models/Params'
 import { CircularProgress, Typography } from '@mui/material'
 
@@ -42,7 +42,7 @@ function Stations() {
 
     return (
         <Fragment>
-            <FilterForm params={params} updateParams={debouncedUpdateParams} clearParams={clearParams} key='form'/>
+            <StationsFilterForm params={params} updateParams={debouncedUpdateParams} clearParams={clearParams} key='form'/>
             {error && !response ?
                 <p>{error.message}</p> : 
                 <StationsTable
