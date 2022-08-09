@@ -2,20 +2,16 @@ import { Grid, Typography, Button } from '@mui/material'
 import { ChangeEvent, useState } from 'react'
 import { StationsParams } from '../../models/Params'
 import ClearIcon from '@mui/icons-material/Clear'
-import AdornedTextField from '../form/AdornedTextField'
+import AdornedTextField from './AdornedTextField'
 import BadgeIcon from '@mui/icons-material/Badge';
 import HomeIcon from '@mui/icons-material/Home';
 import LocationCityIcon from '@mui/icons-material/LocationCity';
 import BusinessIcon from '@mui/icons-material/Business';
 import NumbersIcon from '@mui/icons-material/Numbers';
+import { FilterFormProps } from './FormProps'
 
-interface FilterFormProps {
-    params: Partial<StationsParams>
-    updateParams: (params: Partial<StationsParams>) => void,
-    clearParams: () => void
-}
 
-export default function FilterForm({params, updateParams, clearParams}: FilterFormProps) {
+export default function StationsFilterForm({params, updateParams, clearParams}: FilterFormProps<StationsParams>) {
 
     const [state, setState] = useState(params)
 
@@ -81,7 +77,7 @@ export default function FilterForm({params, updateParams, clearParams}: FilterFo
             </Grid>
         </Grid>
         <Grid container spacing={1} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 2, mb: 1}}>
-        <Grid item>
+            <Grid item>
                 <Button variant='contained' startIcon={<ClearIcon />} onClick={clearParams} size='small' color='error'>
                     Clear
                 </Button>
