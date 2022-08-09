@@ -1,4 +1,5 @@
 import { Station } from "./Station"
+import { Trip } from "./Trip"
 
 interface IPage<T> {
     data: T[]
@@ -8,3 +9,4 @@ interface IPage<T> {
 }
 
 export type StationPage = IPage<Station>
+export type TripsPage = IPage<Trip>
