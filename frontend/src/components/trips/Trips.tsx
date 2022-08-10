@@ -4,9 +4,10 @@ import useApi from '../../hooks/Api'
 import useQueryParams from '../../hooks/Params'
 import { TripsPage } from '../../models/Page'
 import { StationsParams, TripsParams } from '../../models/Params'
-import { CircularProgress, Typography } from '@mui/material'
+import { CircularProgress, Stack, Typography } from '@mui/material'
 import TripsTable from './TripsTable'
 import TripsFilterForm from '../form/TripsFilterForm'
+import './Trips.scss'
 
 
 function Trips() {
@@ -40,12 +41,15 @@ function Trips() {
 
     return (
         <Fragment>
-            <TripsFilterForm params={params} updateParams={debouncedUpdateParams} clearParams={clearParams} />
-            <TripsTable
-                key='stations-table'
-                trips={response}
-                params={params as Required<StationsParams>}
-                updateParams={debouncedUpdateParams} />
+            <Stack sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <Typography variant='h2' className='title'>Bike trips</Typography>
+                <TripsFilterForm params={params} updateParams={debouncedUpdateParams} clearParams={clearParams} />
+                <TripsTable
+                    key='stations-table'
+                    trips={response}
+                    params={params as Required<StationsParams>}
+                    updateParams={debouncedUpdateParams} />
+            </Stack>
         </Fragment>
     )
 }

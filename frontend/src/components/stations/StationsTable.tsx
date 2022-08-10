@@ -24,12 +24,8 @@ const createData = (stations: Station[]): Data[] => {
                 {constructCity(station, 'fi')}<br/>
                 {constructCity(station, 'se')}
             </p>,
-            operator: <p className="station-column-single-name">
-                {station.operator}
-            </p>,
-            capacity: <p className="station-column-single-name">
-                {station.capacity}
-            </p>
+            operator: station.operator,
+            capacity: station.capacity
         }
     })
 }
@@ -42,7 +38,7 @@ interface StationsTableProps {
 
 const StationsTable = ({stations, params, updateParams}: StationsTableProps) => {
     return (
-        <Paper>
+        <Paper sx={{width: '80%', position: 'inherit'}}>
             <TableContainer sx={{maxHeight: 500}}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead >
@@ -59,14 +55,16 @@ const StationsTable = ({stations, params, updateParams}: StationsTableProps) => 
                             stations?.data ?
                                 createData(stations?.data).map((station, index) => (
                                     <TableRow hover role='checkbox' tabIndex={-1} key={index}>
-                                        <TableCell><Link to={`/stations/${station.id}`}><p className="station-column-single-name">
-                                            {station.id}
-                                        </p></Link></TableCell>
+                                        <TableCell align="center">
+                                            <Link to={`/stations/${station.id}`}>
+                                                {station.id}
+                                            </Link>
+                                        </TableCell>
                                         <TableCell>{station.name}</TableCell>
                                         <TableCell>{station.address}</TableCell>
                                         <TableCell>{station.city}</TableCell>
-                                        <TableCell>{station.operator}</TableCell>
-                                        <TableCell>{station.capacity}</TableCell>
+                                        <TableCell align='center'>{station.operator}</TableCell>
+                                        <TableCell align="center">{station.capacity}</TableCell>
                                     </TableRow>
                                 )) :
                                 <></>

@@ -30,15 +30,15 @@ export interface Data {
 export const constructCity = (station: Station, language: 'fi' | 'se') => {
     if(language === 'fi' && station.city_fi)
             return (
-                <>
+                <div style={{display: 'flex', alignItems:'center', justifyContent:'center'}}>
                 <span className="station-text">{station.city_fi}</span><Flag code='fin' height={12} className='flag'/>
-                </>
+                </div>
             )
     else if(language === 'se' && station.city_se)
         return (
-            <>
+            <div style={{display: 'flex', alignItems:'center', justifyContent:'center'}}>
             <span className="station-text">{station.city_se}</span><Flag code='swe' height={12} className='flag'/>
-            </>
+            </div>
         )
     return (<></>)
 }

@@ -12,7 +12,7 @@ interface TripsTableProps {
 
 const TripsTable = ({trips, params, updateParams}: TripsTableProps) => {
     return (
-        <Paper>
+        <Paper sx={{width: '80%', position: 'inherit'}}>
             <TableContainer sx={{maxHeight: 500}}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead >

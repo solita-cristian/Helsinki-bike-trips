@@ -7,7 +7,7 @@ import StationsTable from './StationsTable'
 import './Stations.scss'
 import StationsFilterForm from '../form/StationsFilterForm'
 import { StationsParams } from '../../models/Params'
-import { CircularProgress, Typography } from '@mui/material'
+import { CircularProgress, Stack, Typography } from '@mui/material'
 
 
 function Stations() {
@@ -42,15 +42,15 @@ function Stations() {
 
     return (
         <Fragment>
-            <StationsFilterForm params={params} updateParams={debouncedUpdateParams} clearParams={clearParams} key='form'/>
-            {error && !response ?
-                <p>{error.message}</p> : 
+            <Stack sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <Typography variant='h2' className='title'>Bike stations</Typography>
+                <StationsFilterForm params={params} updateParams={debouncedUpdateParams} clearParams={clearParams} key='form'/><br />
                 <StationsTable
                     key='stations-table'
                     stations={response}
                     params={params as Required<StationsParams>}
                     updateParams={debouncedUpdateParams} />
-            }
+            </Stack>
         </Fragment>
     )
 }
