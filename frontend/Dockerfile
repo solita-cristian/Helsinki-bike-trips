@@ -1,7 +1,7 @@
 FROM node:16-alpine as build
 WORKDIR /build
 COPY package.json package-lock.json ./
-RUN npm install --omit=dev
+RUN npm install
 
 COPY . .
 RUN npm run build
