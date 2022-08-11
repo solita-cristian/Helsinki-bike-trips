@@ -44,5 +44,5 @@ The `/trips` route functions exactly like the `/stations` route, except that it 
 
 ## TODO
 
-[ ] Allow trips to be searched using a range of date times
-[ ] Lower complexity by moving to a more modern framework like [Svelte](https://svelte.dev/)
+- [ ] Allow trips to be searched using a range of date times
+- [ ] Lower complexity by moving to a more modern framework like [Svelte](https://svelte.dev/)
