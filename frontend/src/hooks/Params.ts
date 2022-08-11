@@ -2,11 +2,21 @@
 import { Reducer, useMemo, useReducer } from "react";
 import debounce from 'lodash.debounce'
 
+/**
+ * Defines a generic action
+ */
 interface Action<D> {
     type: string,
     payload: Partial<D>
 }
 
+/**
+ * Custom hook to update query parameters dynamically when they are changed. 
+ * The update is debounced to avoid making a request everytime a character changes.
+ * @param initialParams The starting parameters
+ * @param debounceWait The amount of time to wait before updating the parameters
+ * @returns 
+ */
 function useQueryParams<D>(initialParams: D, debounceWait = 500) {
 
     const reducer = (state: Partial<D>, action: Action<D>) => {

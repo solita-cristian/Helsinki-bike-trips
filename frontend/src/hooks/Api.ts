@@ -3,6 +3,9 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import hash from 'object-hash';
 import { useEffect, useState } from 'react';
 
+/**
+ * Defines a generic response
+ */
 type ApiResponse<T> = {
     response: T | undefined,
     error: Error | undefined,
@@ -11,6 +14,12 @@ type ApiResponse<T> = {
 
 const {CancelToken} = axios;
 
+/**
+ * Custom API hook to perform request to the backend everytime either the URL or the parameters change
+ * @param config The request configuration
+ * @param initialFetch Defines if this hook has ever fetched once
+ * @returns 
+ */
 function useApi<T, D = any>(config: AxiosRequestConfig<D> = {}, initialFetch = true) {
     const [state, setState] = useState<ApiResponse<T>>({
         response: undefined,

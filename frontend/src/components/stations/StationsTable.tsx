@@ -7,6 +7,11 @@ import { StationPage } from "../../models/Page";
 import { columns, constructCity, Data } from "./base";
 import {Link} from 'react-router-dom'
 
+/**
+ * Constructs the components which will be inserted into the table
+ * @param stations The stations
+ * @returns An object of components
+ */
 const createData = (stations: Station[]): Data[] => {
     return stations.map(station => {
         return {
@@ -30,12 +35,20 @@ const createData = (stations: Station[]): Data[] => {
     })
 }
 
+/**
+ * Defines the props of the component
+ */
 interface StationsTableProps {
     stations?: StationPage,
     params: StationsParams,
     updateParams: (newParams: Partial<StationsParams>) => void
 }
 
+/**
+ * Defines a table for hosting station data
+ * @param props The props
+ * @returns A table containing all the stations' data inside
+ */
 const StationsTable = ({stations, params, updateParams}: StationsTableProps) => {
     return (
         <Paper sx={{width: '80%', position: 'inherit'}}>

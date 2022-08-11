@@ -1,3 +1,6 @@
+/**
+ * Defines a station object
+ */
 export type Station = {
     id: number,
     name_fi: string,

@@ -1,8 +1,14 @@
+/**
+ * Defines the bare minimum query parameters
+ */
 export interface Params {
     page: number,
     perPage: number
 }
 
+/**
+ * Defines the query parameters for the /stations route
+ */
 export interface StationsParams extends Params {
     name?: string,
     address?: string,
@@ -11,6 +17,9 @@ export interface StationsParams extends Params {
     capacity?: number
 }
 
+/**
+ * Defines the query parameters for the /trips route
+ */
 export interface TripsParams extends Params {
     departure?: number
     return?: number

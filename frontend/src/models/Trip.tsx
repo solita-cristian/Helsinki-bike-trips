@@ -1,5 +1,8 @@
 import { Station } from "./Station"
 
+/**
+ * Defines a trip object
+ */
 export type Trip = {
     id: number
     departure_time: number

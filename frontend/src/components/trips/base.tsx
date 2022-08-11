@@ -1,5 +1,8 @@
 import { ReactNode } from "react"
 
+/**
+ * Defines all the valid columns in a trips table
+ */
 interface Column {
     id: 'id' | 'departure_time' | 'return_time' | 'distance' | 'duration' | 'departure_station' | 'return_station',
     label: string

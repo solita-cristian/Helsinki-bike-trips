@@ -8,7 +8,11 @@ import StraightenIcon from '@mui/icons-material/Straighten';
 import TimerIcon from '@mui/icons-material/Timer';
 import ClearIcon from '@mui/icons-material/Clear'
 
-
+/**
+ * Defines a filter form specifically for filtering trips, using trips query parameters
+ * @param props The props of the component
+ * @returns A form which update the trips query parameters
+ */
 export default function TripsFilterForm({params, updateParams, clearParams}: FilterFormProps<TripsParams>) {
 
     const [state, setState] = useState(params)

@@ -10,6 +10,10 @@ import TripsFilterForm from '../form/TripsFilterForm'
 import './Trips.scss'
 
 
+/**
+ * Defines a trips page component, which will display the paginated data and the filtering form
+ * @returns The trips page component
+ */
 function Trips() {
     const {params, debouncedUpdateParams, clearParams} = useQueryParams<TripsParams>({
         page: 0,

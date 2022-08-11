@@ -1,6 +1,10 @@
 import { Typography } from '@mui/material'
 import React from 'react'
 
+/**
+ * Defines the homepage of the application
+ * @returns The homepage component
+ */
 export default function Home() {
   return (
     <div>

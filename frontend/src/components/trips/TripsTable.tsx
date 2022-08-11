@@ -4,12 +4,20 @@ import { TripsPage } from "../../models/Page"
 import { TripsParams } from "../../models/Params"
 import { columns } from "./base"
 
+/**
+ * Defines the props for the component
+ */
 interface TripsTableProps {
     trips?: TripsPage,
     params: TripsParams,
     updateParams: (newParams: Partial<TripsParams>) => void
 }
 
+/**
+ * Defines a table for hosting trips data
+ * @param props The props
+ * @returns A table containing all the trips' data inside
+ */
 const TripsTable = ({trips, params, updateParams}: TripsTableProps) => {
     return (
         <Paper sx={{width: '80%', position: 'inherit'}}>
