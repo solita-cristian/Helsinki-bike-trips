@@ -24,9 +24,12 @@ function Stations() {
         capacity: undefined
     })
     const {response, error, isLoading} = useApi<StationPage>({
-        baseURL: `http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/stations`,
+        baseURL: `http://localhost:8080/stations`,
         params: params
     })
+
+
+    console.log(response, error, isLoading)
 
     if(error && !response) {
         return (

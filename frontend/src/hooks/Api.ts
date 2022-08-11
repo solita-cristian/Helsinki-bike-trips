@@ -33,9 +33,11 @@ function useApi<T, D = any>(config: AxiosRequestConfig<D> = {}, initialFetch = t
     const fetch = () => {
         axios.request<T, AxiosResponse<T>, D>(config)
             .then(response => {
+                console.log(response)
                 setState({error: undefined, response: response.data, isLoading: false})
             })
             .catch(error => {
+                console.log(error)
                 if(axios.isCancel(error))
                     console.log(`Request canceled by cleanup: ${error}`)
                 else

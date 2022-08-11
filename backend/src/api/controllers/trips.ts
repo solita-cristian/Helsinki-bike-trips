@@ -105,11 +105,13 @@ export class TripsController extends BaseController<trips> {
                 builder.andWhere('return_time <= :return_time', {return_time: parameters.returnTime})
             }
 
+            const response = await builder.getManyAndCount()
+
             this.sendResult(res, new TripsPage(
-                await builder.getMany(),
+                response[0],
                 parameters.page as number,
                 parameters.perPage as number,
-                tripsCount
+                response[1]
             ))
 
         }

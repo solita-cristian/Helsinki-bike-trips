@@ -24,9 +24,11 @@ function Trips() {
         distance: undefined
     })
     const {response, error, isLoading} = useApi<TripsPage>({
-        baseURL: `http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/trips`,
+        baseURL: `http://localhost:8080/trips`,
         params: params
     })
+
+    console.log(response, error, isLoading)
 
     if(error && !response) {
         return (
