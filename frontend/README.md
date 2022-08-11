@@ -1,46 +1,48 @@
-# Getting Started with Create React App
+# Frontend service
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This service is responsible for showing the data to the user through a web page.
 
-## Available Scripts
+## Getting started
 
-In the project directory, you can run:
+This service is meant to be run in `docker`. See top-level README.md for more information.
 
-### `npm start`
+## Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The stack of the service is:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- ReactJS + Typescript
+- MaterialUI as styling base
+- Axios for making requests
+- ReactRouter for routing
+- Leaflet for showing the map
 
-### `npm test`
+## Routes
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+There are 3 routes: 
 
-### `npm run build`
+- `/stations`, used to show and search all stations
+- `/trips`, used to show and search trips
+- `/stations/:id` used to show detailed data for a particular station based on its `id`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Stations
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The `/stations` route displays a page of variable amount of stations in a table, and can be searched using a form that will perform a new request and update the table component accordingly.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Station
 
-### `npm run eject`
+The `/station/:id` route displays detailed data about a specific station. This data is:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- Name and address
+- The total number of trips starting and ending at the specific station
+- The average distance of the trips starting and ending at the specific station
+- The 5 most common starting and ending stations for trips starting or ending at the specific station
+- The location on the map
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Trips
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+The `/trips` route functions exactly like the `/stations` route, except that it will request trips instead of stations.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## TODO
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+[ ] Allow trips to be searched using a range of date times
+[ ] Lower complexity by moving to a more modern framework like [Svelte](https://svelte.dev/)
