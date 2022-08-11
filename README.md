@@ -28,4 +28,4 @@ This project is made out of 3 services:
 - Backend will host a NodeJS+Express application which will expose an API for the frontend
 - Frontend will host a ReactJS application which will show the data coming from the backend in a user friendly manner
 
-**For more information about the individual services, there are separate README.md files in each of the services' root directory.**
+**For more information about the individual services, there are separate README.md files in each of the services' root directories.**
