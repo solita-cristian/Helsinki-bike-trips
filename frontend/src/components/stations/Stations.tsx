@@ -9,7 +9,10 @@ import StationsFilterForm from '../form/StationsFilterForm'
 import { StationsParams } from '../../models/Params'
 import { CircularProgress, Stack, Typography } from '@mui/material'
 
-
+/**
+ * Defines a station page component, which will display the paginated data and the filtering form
+ * @returns The station page component
+ */
 function Stations() {
     const {params, debouncedUpdateParams, clearParams} = useQueryParams<StationsParams>({
         page: 0,

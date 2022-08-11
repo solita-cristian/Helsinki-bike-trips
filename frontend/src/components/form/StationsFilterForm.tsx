@@ -11,6 +11,11 @@ import NumbersIcon from '@mui/icons-material/Numbers';
 import { FilterFormProps } from './FormProps'
 
 
+/**
+ * Defines a filter form specifically for filtering stations, using station query parameters
+ * @param props The props of the component
+ * @returns A form which update the station query parameters
+ */
 export default function StationsFilterForm({params, updateParams, clearParams}: FilterFormProps<StationsParams>) {
 
     const [state, setState] = useState(params)

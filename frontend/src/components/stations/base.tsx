@@ -3,6 +3,9 @@ import React from "react"
 import { Station } from "../../models/Station"
 import Flag from "react-world-flags"
 
+/**
+ * Defines all the valid columns in a stations table
+ */
 interface Column {
     id: 'id' | 'name' | 'address' | 'city' | 'operator' | 'capacity',
     label: string
@@ -17,6 +20,9 @@ export const columns: Column[] = [
     {id: 'capacity', label: 'Capacity'},
 ]
 
+/**
+ * Defines how each property of the station should be displayed in the table
+ */
 export interface Data {
     id: number,
     name: ReactNode,
@@ -26,7 +32,12 @@ export interface Data {
     capacity: ReactNode
 }
 
-
+/**
+ * Construct a component showing the station's city name and language flag 
+ * @param station The station
+ * @param language The language
+ * @returns A component composed of the city name and a flag indicating its language
+ */
 export const constructCity = (station: Station, language: 'fi' | 'se') => {
     if(language === 'fi' && station.city_fi)
             return (

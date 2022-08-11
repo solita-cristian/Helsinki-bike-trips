@@ -5,6 +5,10 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 
 const pages = ['Stations', 'Trips']
 
+/**
+ * Defines the header of the application
+ * @returns An Appbar that will appear at every route
+ */
 export default function Header() {
 
   return (
