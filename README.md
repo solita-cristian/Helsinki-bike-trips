@@ -29,3 +29,15 @@ This project is made out of 3 services:
 - Frontend will host a ReactJS application which will show the data coming from the backend in a user friendly manner
 
 **For more information about the individual services, there are separate README.md files in each of the services' root directories.**
+
+## Docker compose stack
+
+The `docker-compose.yaml` file tells docker how to build and connect each of the services. In this case each service is built using a specific `Dockerfile`, which can be found in the specific service root directory.
+
+Each service container exposes a default port, which are:
+
+- For the backend `8080`
+- For the frontend `3000`
+- For the database the postgresql default `5432`
+
+So, going to `http://localhost:$PORT/` will take you to the service's home page, if exists, based on the value of `$PORT`.
