@@ -198,11 +198,11 @@ export default function StationPage() {
     }
 
     const station = useApi<Station>({
-        baseURL: `http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/stations/${params.id}`,
+        baseURL: `http://localhost:8080/stations/${params.id}`,
     })
 
     const statistics = useApi<StationStatistics>({
-        baseURL: `http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/stations/${params.id}/stats`,
+        baseURL: `http://localhost:8080/stations/${params.id}/stats`,
         params: queryParams.params
     })
 
